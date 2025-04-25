@@ -1,21 +1,25 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
-import Features from '@/components/Features';
-import Testimonials from '@/components/Testimonials';
-import CallToAction from '@/components/CallToAction';
+import Products from '@/components/Products';
+import About from '@/components/About';
 import Footer from '@/components/Footer';
+import Cart from '@/components/Cart';
 
 const Index = () => {
+  const [showCart, setShowCart] = useState(false);
+  
   return (
     <div className="min-h-screen bg-cyborg-dark text-white overflow-x-hidden">
-      <Navbar />
-      <Hero />
-      <Features />
-      <Testimonials />
-      <CallToAction />
-      <Footer />
+      <div className="interactive-bg">
+        <Navbar onCartClick={() => setShowCart(true)} />
+        <Hero />
+        <Products />
+        <About />
+        <Footer />
+        <Cart isOpen={showCart} onClose={() => setShowCart(false)} />
+      </div>
     </div>
   );
 };

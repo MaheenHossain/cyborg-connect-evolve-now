@@ -3,83 +3,144 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 240 6% 10%;
-    --foreground: 0 0% 98%;
+:root {
+  --background: 0 0% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 210 100% 50%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 195 100% 50%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 213 60% 25%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 14.9%;
+  --input: 0 0% 14.9%;
+  --ring: 210 100% 50%;
+  --radius: 0.5rem;
+  
+  --cyborg-dark: #050810;
+  --cyborg-blue: #0062E6;
+  --cyborg-cyan: #00B8D9;
+}
 
-    --card: 240 6% 10%;
-    --card-foreground: 0 0% 98%;
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+body {
+  background-color: var(--cyborg-dark);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 
-    --primary: 264 70% 50%;
-    --primary-foreground: 210 40% 98%;
+.animate-text-shimmer {
+  animation: shimmer 2s linear infinite;
+}
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 264 70% 50%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 264 70% 50%;
-
-    --radius: 0.5rem;
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
 
-  body {
-    @apply bg-cyborg-dark text-foreground;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+@keyframes float {
+  0% {
+    transform: translateY(0px);
   }
-  
-  ::selection {
-    @apply bg-cyborg-purple text-white;
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }
 
-@layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-cyborg-purple to-cyborg-blue bg-clip-text text-transparent;
+.interactive-bg {
+  position: relative;
+  background: var(--cyborg-dark);
+}
+
+.interactive-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  background-image: 
+    radial-gradient(circle at 25% 25%, var(--cyborg-blue) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, var(--cyborg-cyan) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-cyborg-dark {
+  background-color: var(--cyborg-dark);
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
   }
-  
-  .bg-grid {
-    @apply bg-cyber-grid bg-[size:40px_40px];
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
   }
-  
-  .glow-border {
-    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.3), 
-                0 0 20px rgba(139, 92, 246, 0.2);
-  }
-  
-  .cyber-card {
-    @apply relative overflow-hidden rounded-lg border border-cyborg-purple/30 bg-cyborg-dark-light p-6;
-  }
-  
-  .cyber-card::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-br from-cyborg-purple/10 to-cyborg-blue/10 opacity-70;
-  }
-  
-  .cyber-card > * {
-    @apply relative z-10;
-  }
-  
-  .clip-path-slant {
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-  }
+}
+
+/* Button hover animations */
+button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+}
+
+button:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 1;
+  transition: 0s;
 }
