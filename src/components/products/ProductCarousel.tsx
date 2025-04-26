@@ -1,0 +1,51 @@
+
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Product } from '@/types/product';
+import ProductCard from '@/components/ProductCard';
+import { useToast } from '@/components/ui/use-toast';
+
+interface ProductCarouselProps {
+  products: Product[];
+  onShowAuthModal: (product: Product) => void;
+}
+
+const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, onShowAuthModal }) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleAddToCart = (product: Product) => {
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart.`,
+    });
+  };
+
+  const handleProductClick = (product: Product) => {
+    navigate(`/product/${product.id}`);
+  };
+
+  return (
+    <Carousel className="w-full max-w-6xl mx-auto">
+      <CarouselContent>
+        {products.map((product) => (
+          <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/3 pl-4">
+            <ProductCard 
+              product={product} 
+              onAddToCart={() => handleAddToCart(product)} 
+              onBuyNow={() => onShowAuthModal(product)}
+              onClick={() => handleProductClick(product)}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <div className="flex justify-center mt-8 gap-4">
+        <CarouselPrevious className="static transform-none" />
+        <CarouselNext className="static transform-none" />
+      </div>
+    </Carousel>
+  );
+};
+
+export default ProductCarousel;
