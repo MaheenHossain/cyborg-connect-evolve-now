@@ -22,7 +22,7 @@ const About = () => {
           variants={fadeIn}
           className="text-4xl md:text-5xl font-bold mb-12 text-center"
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-300">
             About Cybrix Core
           </span>
         </motion.h2>
@@ -70,11 +70,16 @@ const About = () => {
             variants={fadeIn}
             className="space-y-8"
           >
-            <div className="bg-gradient-to-r from-blue-900/20 to-cyan-900/20 p-8 rounded-xl border border-blue-800/30">
-              <h3 className="text-2xl font-bold mb-4 text-white">Founder</h3>
+            <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 p-8 rounded-xl border border-blue-800/30">
+              <h3 className="text-xl font-bold mb-4 text-blue-400">Founder</h3>
               <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center overflow-hidden">
-                  <span className="text-3xl font-bold text-white">SH</span>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/40 to-purple-500/40 rounded-full blur-md animate-pulse"></div>
+                  <div className="relative w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 p-1">
+                    <div className="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+                      <span className="text-3xl font-bold text-white">SH</span>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <h4 className="text-xl font-semibold text-blue-400">Shaikh Maheen Hossain</h4>

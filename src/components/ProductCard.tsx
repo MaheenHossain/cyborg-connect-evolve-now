@@ -12,9 +12,10 @@ interface ProductCardProps {
   product: Product;
   onAddToCart: () => void;
   onBuyNow: () => void;
+  onClick?: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNow }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNow, onClick }) => {
   const [showDetails, setShowDetails] = useState(false);
   
   return (
@@ -23,8 +24,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
+      onClick={onClick}
+      className="cursor-pointer"
     >
-      <Card className="bg-black/40 border border-blue-900/50 overflow-hidden h-full flex flex-col">
+      <Card className="bg-black/40 border border-blue-900/50 overflow-hidden h-full flex flex-col hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
         <CardHeader className="p-0 relative">
           <div className="h-56 overflow-hidden bg-gradient-to-b from-blue-900/20 to-cyan-900/20">
             <motion.img
@@ -34,10 +37,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-blue-500/30">
+                <Eye className="mr-2 h-4 w-4" />
+                View Details
+              </Button>
+            </div>
           </div>
         </CardHeader>
         
-        <CardContent className="p-6 flex-grow">
+        <CardContent className="p-6 flex-grow" onClick={(e) => e.stopPropagation()}>
           <h3 className="text-xl font-bold mb-2 text-white">{product.name}</h3>
           <p className="text-gray-400 mb-4">{product.description}</p>
           <p className="text-2xl font-bold text-blue-400">${product.price.toFixed(2)}</p>
@@ -45,7 +54,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => setShowDetails(!showDetails)}
+            onClick={(e) => { 
+              e.stopPropagation();
+              setShowDetails(!showDetails);
+            }}
             className="mt-4 flex items-center text-sm text-gray-400 hover:text-white"
           >
             {showDetails ? "Hide details" : "View details"}
@@ -83,9 +95,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           )}
         </CardContent>
         
-        <CardFooter className="flex gap-2 p-6 pt-0">
+        <CardFooter className="flex gap-2 p-6 pt-0" onClick={(e) => e.stopPropagation()}>
           <Button 
-            onClick={onAddToCart}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart();
+            }}
             variant="outline" 
             className="flex-1 hover:bg-blue-900/30"
           >
@@ -94,7 +109,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           </Button>
           
           <Button 
-            onClick={onBuyNow}
+            onClick={(e) => {
+              e.stopPropagation();
+              onBuyNow();
+            }}
             className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
           >
             Buy Now

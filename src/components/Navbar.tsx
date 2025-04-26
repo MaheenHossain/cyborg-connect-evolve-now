@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { ShoppingCart, Menu, X, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import AuthModal from '@/components/AuthModal';
 
 interface NavbarProps {
   onCartClick: () => void;
@@ -13,6 +14,7 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,10 +25,12 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Animation for logo on hover
-  const logoAnimation = {
-    initial: { scale: 1 },
-    hover: { scale: 1.05, transition: { duration: 0.3 } },
+  const handleSignIn = () => {
+    setShowAuthModal(true);
+  };
+
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
   };
 
   return (
@@ -37,12 +41,13 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
     >
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <div className="relative w-10 h-10 bg-blue-500 rounded-full overflow-hidden transform hover:scale-105 transition-transform duration-300">
-            <div className="absolute w-full h-full flex items-center justify-center">
-              <div className="w-6 h-6 border-t-2 border-l-2 border-white rounded-full rotate-45"></div>
-            </div>
-            <div className="absolute w-full h-full flex items-center justify-center">
-              <div className="w-3 h-3 bg-white rounded-full"></div>
+          <div className="relative w-12 h-12 flex items-center justify-center">
+            <div className="absolute w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 animate-pulse opacity-40"></div>
+            <div className="absolute w-10 h-10 rounded-full bg-black flex items-center justify-center z-10">
+              <div className="w-8 h-8 rounded-full border-2 border-t-blue-500 border-r-blue-500 border-b-cyan-400 border-l-cyan-400 flex items-center justify-center relative">
+                <div className="absolute w-5 h-5 rounded-full border-2 border-t-blue-300 border-r-transparent border-b-transparent border-l-blue-300 animate-spin"></div>
+                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              </div>
             </div>
           </div>
           <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
@@ -54,6 +59,14 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
           <Link to="/" className="hover:text-cyan-400 transition-colors">Home</Link>
           <a href="#products" className="hover:text-cyan-400 transition-colors">Products</a>
           <a href="#about" className="hover:text-cyan-400 transition-colors">About</a>
+          <Button 
+            onClick={handleSignIn}
+            variant="ghost" 
+            className="hover:bg-blue-800/20 transition-colors flex items-center gap-2"
+          >
+            <User className="w-4 h-4" />
+            Sign In
+          </Button>
           <Button 
             onClick={onCartClick}
             variant="ghost" 
@@ -69,12 +82,20 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
           </Button>
         </div>
 
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center gap-2">
+          <Button 
+            onClick={handleSignIn}
+            variant="ghost" 
+            size="icon"
+            className="hover:bg-blue-800/20"
+          >
+            <User className="w-5 h-5" />
+          </Button>
           <Button 
             onClick={onCartClick} 
             variant="ghost" 
             size="icon"
-            className="relative mr-2 hover:bg-blue-800/20"
+            className="relative hover:bg-blue-800/20"
           >
             <ShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
@@ -103,6 +124,15 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
             <a href="#about" className="py-2 hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a>
           </div>
         </div>
+      )}
+
+      {showAuthModal && (
+        <AuthModal 
+          isOpen={showAuthModal} 
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={handleAuthSuccess}
+          product={null}
+        />
       )}
     </nav>
   );

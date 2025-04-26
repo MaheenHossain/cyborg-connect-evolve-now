@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowDown } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -22,6 +23,27 @@ const Hero = () => {
     
     document.addEventListener('mousemove', handleMouseMove);
     return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Scroll reveal functionality
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal-element').forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => {
+      document.querySelectorAll('.reveal-element').forEach((el) => {
+        observer.unobserve(el);
+      });
+    };
   }, []);
 
   const scrollToProducts = () => {
@@ -46,43 +68,72 @@ const Hero = () => {
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
       
       <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center">
-        <div className="flex-1 text-center lg:text-left mb-10 lg:mb-0 z-10">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-text-shimmer bg-clip-text text-transparent bg-[linear-gradient(to_right,#0ea5e9,#2563eb,#0ea5e9)] bg-[length:200%_auto]">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="flex-1 text-center lg:text-left mb-10 lg:mb-0 z-10"
+        >
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 font-cyber animate-text-shimmer bg-clip-text text-transparent bg-[linear-gradient(to_right,#0ea5e9,#a855f7,#0ea5e9)] bg-[length:200%_auto]">
             Evolution Beyond Humanity
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-gray-300 max-w-2xl mx-auto lg:mx-0">
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="text-xl md:text-2xl mb-8 text-gray-300 max-w-2xl mx-auto lg:mx-0"
+          >
             Premium cybernetic enhancements designed to transcend physical limitations. 
             Experience the future with Cybrix Core technology.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+          >
             <Button 
               onClick={scrollToProducts} 
               size="lg" 
-              className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 transition-all group"
+              className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-size-200 hover:bg-right-bottom transition-all duration-500 group"
             >
               <span className="relative z-10">Explore Products</span>
               <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
             </Button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         
-        <div className="flex-1 relative">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ 
+            duration: 0.8,
+            type: "spring",
+            stiffness: 100
+          }}
+          className="flex-1 relative reveal-element"
+        >
           <div className="relative w-full aspect-square max-w-lg mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 via-blue-500/20 to-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
             <img 
-              src="/cyborg-hero.png" 
+              src="/public/lovable-uploads/29e41a46-79a0-4d3b-8d89-0cfd8f95a429.png" 
               alt="Cybrix Core Enhancement" 
               className="relative z-10 w-full h-full object-contain animate-float"
             />
           </div>
-        </div>
+        </motion.div>
       </div>
       
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce"
+      >
         <Button variant="ghost" size="icon" onClick={scrollToProducts}>
           <ArrowDown className="h-6 w-6" />
         </Button>
-      </div>
+      </motion.div>
     </div>
   );
 };

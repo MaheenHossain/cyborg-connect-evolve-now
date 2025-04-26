@@ -9,7 +9,7 @@ import {
   SheetFooter,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Trash2, Plus, Minus } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingCart } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import AuthModal from '@/components/AuthModal';
 
