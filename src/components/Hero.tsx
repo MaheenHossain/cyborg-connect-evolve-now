@@ -1,50 +1,18 @@
-
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowDown } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Scene } from './3D/Scene';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!heroRef.current) return;
-      
-      const { clientX, clientY } = e;
-      const { width, height, left, top } = heroRef.current.getBoundingClientRect();
-      
-      const x = (clientX - left) / width - 0.5;
-      const y = (clientY - top) / height - 0.5;
-      
-      heroRef.current.style.setProperty('--mouse-x', `${x * 20}px`);
-      heroRef.current.style.setProperty('--mouse-y', `${y * 20}px`);
-    };
-    
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
 
-  // Scroll reveal functionality
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.reveal-element').forEach((el) => {
-      observer.observe(el);
-    });
-
-    return () => {
-      document.querySelectorAll('.reveal-element').forEach((el) => {
-        observer.unobserve(el);
-      });
-    };
-  }, []);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const scrollToProducts = () => {
     const productsSection = document.getElementById('products');
@@ -56,23 +24,14 @@ const Hero = () => {
   return (
     <div 
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center bg-cyborg-dark overflow-hidden"
-      style={{
-        backgroundImage: `radial-gradient(
-          circle at calc(50% + var(--mouse-x, 0)) calc(50% + var(--mouse-y, 0)),
-          rgba(0, 100, 200, 0.15),
-          transparent 40%
-        )`
-      }}
+      className="relative min-h-screen flex items-center justify-center bg-cyborg-dark overflow-hidden pt-20 lg:pt-0"
     >
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
       
-      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center">
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-12">
         <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="flex-1 text-center lg:text-left mb-10 lg:mb-0 z-10"
+          style={{ opacity }}
+          className="flex-1 text-center lg:text-left z-10 mt-16 lg:mt-0"
         >
           <h1 className="text-5xl md:text-7xl font-bold mb-6 font-cyber animate-text-shimmer bg-clip-text text-transparent bg-[linear-gradient(to_right,#0ea5e9,#a855f7,#0ea5e9)] bg-[length:200%_auto]">
             Evolution Beyond Humanity
@@ -104,31 +63,17 @@ const Hero = () => {
         </motion.div>
         
         <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ 
-            duration: 0.8,
-            type: "spring",
-            stiffness: 100
-          }}
-          className="flex-1 relative reveal-element"
+          className="flex-1 h-[400px] lg:h-[600px] w-full relative reveal-on-scroll"
+          style={{ y, opacity }}
         >
-          <div className="relative w-full aspect-square max-w-lg mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 via-blue-500/20 to-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
-            <img 
-              src="/public/lovable-uploads/29e41a46-79a0-4d3b-8d89-0cfd8f95a429.png" 
-              alt="Cybrix Core Enhancement" 
-              className="relative z-10 w-full h-full object-contain animate-float"
-            />
-          </div>
+          <Scene />
         </motion.div>
       </div>
       
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
       >
         <Button variant="ghost" size="icon" onClick={scrollToProducts}>
           <ArrowDown className="h-6 w-6" />

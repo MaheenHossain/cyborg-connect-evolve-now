@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -162,6 +161,28 @@ button:active::after {
 .reveal-element.active {
   opacity: 1;
   transform: translateY(0);
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal-on-scroll.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-top: 5rem;
+  }
+  
+  .nav-fixed {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+  }
 }
 
 /* Cyberpunk neon glow effect */

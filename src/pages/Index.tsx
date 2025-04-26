@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Index = () => {
   const [showCart, setShowCart] = React.useState(false);
-  
+
   return (
     <AnimatePresence mode="wait">
       <motion.div 
@@ -26,9 +26,15 @@ const Index = () => {
           
           <Hero />
           
-          <Products />
-          
-          <About />
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false }}
+            transition={{ staggerChildren: 0.2 }}
+          >
+            <Products />
+            <About />
+          </motion.div>
           
           <Footer />
           <Cart isOpen={showCart} onClose={() => setShowCart(false)} />
