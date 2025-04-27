@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowDown } from 'lucide-react';
@@ -24,7 +25,7 @@ const Hero = () => {
   return (
     <div 
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center bg-cyborg-dark overflow-hidden pt-20 lg:pt-0"
+      className="relative min-h-screen flex items-center justify-center bg-cyborg-dark overflow-hidden pt-24 sm:pt-20 lg:pt-0"
     >
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
       

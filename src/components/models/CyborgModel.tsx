@@ -16,7 +16,7 @@ export function CyborgModel() {
     <mesh ref={meshRef}>
       <sphereGeometry args={[1, 32, 32]} />
       <meshStandardMaterial 
-        color="#4a9eff"
+        color={new THREE.Color("#4a9eff")}
         metalness={0.7}
         roughness={0.2}
         envMapIntensity={0.5}
