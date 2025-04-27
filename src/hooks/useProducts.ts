@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Category, Product } from '@/types/product';
@@ -32,7 +33,7 @@ export const useProducts = () => {
             name: 'Quantum Arc Reactor',
             description: 'Revolutionary clean energy source with advanced neural interface capabilities. Our flagship product representing the pinnacle of human-machine integration.',
             price: 25999.99,
-            image_url: '/product-arc-reactor.png',
+            image_url: 'https://images.unsplash.com/photo-1640999364546-3f715313dad1?q=80&w=1920&h=1280&auto=format&fit=crop',
             category_id: '4',
             created_at: new Date().toISOString(),
             features: {
@@ -54,7 +55,7 @@ export const useProducts = () => {
             name: 'NeuroLink Pro',
             description: 'Advanced neural interface for direct mind-computer connection',
             price: 7999.99,
-            image_url: '/product-neurolink.png',
+            image_url: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?q=80&w=1920&h=1280&auto=format&fit=crop',
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -73,7 +74,7 @@ export const useProducts = () => {
             name: 'Titan Arm X1',
             description: 'Military-grade cybernetic arm with enhanced strength and precision',
             price: 8499.99,
-            image_url: '/product-arm.png',
+            image_url: 'https://images.unsplash.com/photo-1594608661623-aa0bd3a69799?q=80&w=1920&h=1280&auto=format&fit=crop',
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
@@ -92,7 +93,7 @@ export const useProducts = () => {
             name: 'Eagle Eye V5',
             description: 'Cybernetic eye enhancement with 100x zoom and night vision',
             price: 5999.99,
-            image_url: '/product-eye.png',
+            image_url: 'https://images.unsplash.com/photo-1562115911-97eff4294215?q=80&w=1920&h=1280&auto=format&fit=crop',
             category_id: '3',
             created_at: new Date().toISOString(),
             features: {
@@ -111,7 +112,7 @@ export const useProducts = () => {
             name: 'CardioTech Heart',
             description: 'Synthetic heart with 300% efficiency compared to biological hearts',
             price: 9999.99,
-            image_url: '/product-heart.png',
+            image_url: 'https://images.unsplash.com/photo-1628595351029-c2bf17511435?q=80&w=1920&h=1280&auto=format&fit=crop',
             category_id: '4',
             created_at: new Date().toISOString(),
             features: {
@@ -130,7 +131,7 @@ export const useProducts = () => {
             name: 'CortexCore Neural Interface',
             description: 'Direct neural interface with advanced AI integration capabilities',
             price: 8299.99,
-            image_url: 'public/lovable-uploads/ca96e439-a3bd-41ef-8083-b60732aa9d27.png',
+            image_url: 'https://images.unsplash.com/photo-1647427060118-4911c9821b82?q=80&w=1920&h=1280&auto=format&fit=crop',
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -149,7 +150,7 @@ export const useProducts = () => {
             name: 'Precision Hand MK-II',
             description: 'Ultra-precise cybernetic hand with tactile feedback system',
             price: 7599.99,
-            image_url: 'public/lovable-uploads/8cf69124-7ee1-4d6e-a84f-c0f7b0004e3c.png',
+            image_url: 'https://images.unsplash.com/photo-1562115909-9cb242397304?q=80&w=1920&h=1280&auto=format&fit=crop',
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {

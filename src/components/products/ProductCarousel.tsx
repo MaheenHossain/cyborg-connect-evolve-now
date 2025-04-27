@@ -28,15 +28,17 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, onShowAuthM
 
   return (
     <Carousel className="w-full max-w-6xl mx-auto">
-      <CarouselContent>
+      <CarouselContent className="-ml-1 md:-ml-4">
         {products.map((product) => (
-          <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/3 pl-4">
-            <ProductCard 
-              product={product} 
-              onAddToCart={() => handleAddToCart(product)} 
-              onBuyNow={() => onShowAuthModal(product)}
-              onClick={() => handleProductClick(product)}
-            />
+          <CarouselItem key={product.id} className="pl-1 md:pl-4 md:basis-1/2 lg:basis-1/3">
+            <div className="p-1">
+              <ProductCard 
+                product={product} 
+                onAddToCart={() => handleAddToCart(product)} 
+                onBuyNow={() => onShowAuthModal(product)}
+                onClick={() => handleProductClick(product)}
+              />
+            </div>
           </CarouselItem>
         ))}
       </CarouselContent>

@@ -1,11 +1,10 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Eye, ChevronDown, ChevronUp } from 'lucide-react';
-import { Tables } from '@/integrations/supabase/types';
+import { Product } from '@/types/product';
 import { motion } from 'framer-motion';
-
-type Product = Tables<'products'>;
 
 interface ProductCardProps {
   product: Product;
@@ -36,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
         <CardHeader className="p-0 relative">
           <div className="h-56 overflow-hidden bg-gradient-to-b from-blue-900/20 to-cyan-900/20">
             <motion.img
-              src={product.image_url || '/placeholder.svg'}
+              src={product.image_url}
               alt={product.name}
               className="w-full h-full object-cover object-center"
               whileHover={{ scale: 1.05 }}
@@ -100,14 +99,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           )}
         </CardContent>
         
-        <CardFooter className="flex gap-2 p-6 pt-0" onClick={(e) => e.stopPropagation()}>
+        <CardFooter className="flex flex-col sm:flex-row gap-2 p-6 pt-0" onClick={(e) => e.stopPropagation()}>
           <Button 
             onClick={(e) => {
               e.stopPropagation();
               onAddToCart();
             }}
             variant="outline" 
-            className="flex-1 hover:bg-blue-900/30"
+            className="w-full sm:flex-1 hover:bg-blue-900/30"
           >
             <ShoppingCart className="mr-2 h-4 w-4" />
             Add to Cart
@@ -118,7 +117,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
               e.stopPropagation();
               onBuyNow();
             }}
-            className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
+            className="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
           >
             Buy Now
           </Button>

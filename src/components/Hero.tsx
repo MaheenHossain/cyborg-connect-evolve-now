@@ -129,7 +129,7 @@ const Hero = () => {
         >
           <div className="relative w-full h-full">
             <div className="absolute inset-0 z-10 bg-gradient-radial from-transparent to-cyborg-dark opacity-50 pointer-events-none"></div>
-            <Scene />
+            <Scene model="cyborgModel" />
             
             {/* Tech specs floating around the model */}
             <div className="absolute top-1/4 left-0 transform -translate-x-1/2 bg-black/50 backdrop-blur-sm border border-blue-500/30 px-3 py-2 rounded-lg text-xs text-blue-400 hidden lg:block">

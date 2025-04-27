@@ -2,6 +2,7 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
+import CoreTechnology from '@/components/CoreTechnology';
 import Products from '@/components/Products';
 import About from '@/components/About';
 import Footer from '@/components/Footer';
@@ -25,6 +26,7 @@ const Index = () => {
           <Navbar onCartClick={() => setShowCart(true)} />
           
           <Hero />
+          <CoreTechnology />
           
           <motion.div
             initial="hidden"

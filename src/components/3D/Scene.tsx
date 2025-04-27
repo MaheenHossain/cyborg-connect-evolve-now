@@ -1,3 +1,4 @@
+
 import { Canvas } from '@react-three/fiber';
 import { 
   OrbitControls, 
@@ -9,6 +10,7 @@ import {
 } from '@react-three/drei';
 import { Suspense } from 'react';
 import { ArcReactor } from '../models/ArcReactor';
+import { CyborgModel } from '../models/CyborgModel';
 import * as THREE from 'three';
 
 // Floor/platform component
@@ -86,7 +88,11 @@ const AmbientParticles = () => {
   );
 };
 
-export const Scene = () => {
+type SceneProps = {
+  model: 'arcReactor' | 'cyborgModel';
+};
+
+export const Scene: React.FC<SceneProps> = ({ model }) => {
   return (
     <Canvas className="w-full h-full" shadows>
       <color attach="background" args={['#050810']} />
@@ -116,7 +122,7 @@ export const Scene = () => {
           rotationIntensity={0.5}
           floatIntensity={0.5}
         >
-          <ArcReactor />
+          {model === 'arcReactor' ? <ArcReactor /> : <CyborgModel />}
         </Float>
         
         <CyberPlatform />
