@@ -6,7 +6,8 @@ import {
   Environment, 
   Float, 
   useTexture,
-  Sparkles
+  Sparkles,
+  Grid
 } from '@react-three/drei';
 import { Suspense } from 'react';
 import { CyborgModel } from '../models/CyborgModel';
@@ -25,15 +26,19 @@ const CyberPlatform = () => {
         color="#1a1a2e"
         metalness={0.6}
         roughness={0.2}
-      >
-        <gridTexture 
-          args={[10, 10]}
-          colorA="#0099ff" 
-          colorB="#001933" 
-          thickness={0.05}
-          attach="map"
-        />
-      </meshStandardMaterial>
+      />
+      <Grid
+        position={[0, 0.051, 0]}
+        args={[5, 5]}
+        cellSize={0.2}
+        cellThickness={0.5}
+        cellColor="#0099ff"
+        sectionSize={1}
+        sectionThickness={1}
+        sectionColor="#001933"
+        fadeDistance={5}
+        fadeStrength={1}
+      />
     </mesh>
   );
 };
