@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,8 +24,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
       onClick={onClick}
-      className="cursor-pointer"
+      className="cursor-pointer relative"
     >
+      {product.special && (
+        <div className="absolute -top-4 -right-4 z-10 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">
+          Special Product
+        </div>
+      )}
+      
       <Card className="bg-black/40 border border-blue-900/50 overflow-hidden h-full flex flex-col hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
         <CardHeader className="p-0 relative">
           <div className="h-56 overflow-hidden bg-gradient-to-b from-blue-900/20 to-cyan-900/20">

@@ -15,7 +15,6 @@ export const useProducts = () => {
         if (data) setCategories(data);
       } catch (error) {
         console.error('Error fetching categories:', error);
-        // Use sample data as fallback
         setCategories([
           { id: '1', name: 'Neural Implants', description: 'Advanced brain-computer interfaces', image_url: null },
           { id: '2', name: 'Cybernetic Limbs', description: 'Precision-engineered replacement limbs', image_url: null },
@@ -27,9 +26,29 @@ export const useProducts = () => {
 
     const fetchProducts = async () => {
       try {
-        // In a real app we'd fetch from Supabase
-        // For now, use sample data with proper typing
         const SAMPLE_PRODUCTS: Product[] = [
+          {
+            id: 'special-1',
+            name: 'Quantum Arc Reactor',
+            description: 'Revolutionary clean energy source with advanced neural interface capabilities. Our flagship product representing the pinnacle of human-machine integration.',
+            price: 25999.99,
+            image_url: '/product-arc-reactor.png',
+            category_id: '4',
+            created_at: new Date().toISOString(),
+            features: {
+              powerOutput: '3 gigajoules per second',
+              efficiency: '99.99%',
+              neuralInterface: 'Advanced AI integration',
+              durability: 'Self-regenerating palladium core'
+            },
+            technical_specs: {
+              dimensions: '8.9cm diameter x 4.2cm depth',
+              weight: '375g',
+              material: 'Vibranium-Palladium alloy',
+              cooling: 'Quantum state refrigeration'
+            },
+            special: true
+          },
           {
             id: '1',
             name: 'NeuroLink Pro',

@@ -1,16 +1,14 @@
-
 import { Canvas } from '@react-three/fiber';
 import { 
   OrbitControls, 
   PerspectiveCamera, 
   Environment, 
   Float, 
-  useTexture,
   Sparkles,
   Grid
 } from '@react-three/drei';
 import { Suspense } from 'react';
-import { CyborgModel } from '../models/CyborgModel';
+import { ArcReactor } from '../models/ArcReactor';
 import * as THREE from 'three';
 
 // Floor/platform component
@@ -114,11 +112,11 @@ export const Scene = () => {
       
       <Suspense fallback={null}>
         <Float
-          speed={2}
+          speed={1.5}
           rotationIntensity={0.5}
           floatIntensity={0.5}
         >
-          <CyborgModel />
+          <ArcReactor />
         </Float>
         
         <CyberPlatform />
