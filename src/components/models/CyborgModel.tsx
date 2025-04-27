@@ -5,7 +5,8 @@ import * as THREE from 'three';
 
 export function CyborgModel() {
   const group = useRef<THREE.Group>(null);
-  const headRef = useRef<THREE.Mesh>(null);
+  // Fix the headRef to be a Group instead of a Mesh
+  const headRef = useRef<THREE.Group>(null);
   
   // Animation state
   const [hovered, setHovered] = useState(false);
@@ -37,11 +38,11 @@ export function CyborgModel() {
     
     // Animate eyes
     if (headRef.current) {
-      const eyes = headRef.current.children;
-      eyes.forEach((eye, i) => {
-        const material = (eye as THREE.Mesh).material as THREE.MeshStandardMaterial;
-        if (material) {
-          material.emissiveIntensity = 1.5 + Math.sin(state.clock.elapsedTime * 2 + i * 0.5) * 0.5;
+      // Fixed: Access children of the headRef Group
+      headRef.current.children.forEach((child, i) => {
+        // Only apply to meshes with materials
+        if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+          child.material.emissiveIntensity = 1.5 + Math.sin(state.clock.elapsedTime * 2 + i * 0.5) * 0.5;
         }
       });
     }

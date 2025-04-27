@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { PointLight } from '@react-three/drei';
+// Remove PointLight import and use pointLight primitive instead
 
 export function ArcReactor() {
   const groupRef = useRef<THREE.Group>(null);
@@ -148,8 +148,8 @@ export function ArcReactor() {
         />
       </mesh>
       
-      {/* Point light for the glow effect */}
-      <PointLight
+      {/* Replace PointLight with pointLight (lowercase, Three.js primitive) */}
+      <pointLight
         color="#33C3F0"
         intensity={2}
         distance={3}
