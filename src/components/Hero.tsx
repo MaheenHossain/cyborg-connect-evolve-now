@@ -1,9 +1,10 @@
-
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowDown } from 'lucide-react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Scene } from './3D/Scene';
+import { removeBackground, loadImage } from '@/utils/imageProcessing';
+import { toast } from 'sonner';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -25,7 +26,26 @@ const Hero = () => {
     }
   };
   
-  // Apply reveal classes based on scroll
+  const [processedImage, setProcessedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const processImage = async () => {
+      try {
+        const response = await fetch('/lovable-uploads/d92facf4-a8f4-4a6c-8573-4a852d84c46a.png');
+        const blob = await response.blob();
+        const img = await loadImage(blob);
+        const processedBlob = await removeBackground(img);
+        const processedUrl = URL.createObjectURL(processedBlob);
+        setProcessedImage(processedUrl);
+      } catch (error) {
+        console.error('Error processing image:', error);
+        toast.error('Failed to process hero image');
+      }
+    };
+
+    processImage();
+  }, []);
+
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -129,9 +149,20 @@ const Hero = () => {
         >
           <div className="relative w-full h-full">
             <div className="absolute inset-0 z-10 bg-gradient-radial from-transparent to-cyborg-dark opacity-50 pointer-events-none"></div>
-            <Scene model="cyborgModel" />
+            {processedImage ? (
+              <img 
+                src={processedImage}
+                alt="Cyborg"
+                className="w-full h-full object-contain absolute inset-0 z-0"
+                style={{ 
+                  filter: 'drop-shadow(0 0 20px rgba(74, 158, 255, 0.2))',
+                  animation: 'float 6s ease-in-out infinite'
+                }}
+              />
+            ) : (
+              <Scene model="cyborgModel" />
+            )}
             
-            {/* Tech specs floating around the model */}
             <div className="absolute top-1/4 left-0 transform -translate-x-1/2 bg-black/50 backdrop-blur-sm border border-blue-500/30 px-3 py-2 rounded-lg text-xs text-blue-400 hidden lg:block">
               Neural Capacity: 12.8 TB
             </div>
