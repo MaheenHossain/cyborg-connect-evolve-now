@@ -27,13 +27,14 @@ export const useProducts = () => {
 
     const fetchProducts = async () => {
       try {
+        // Updated paths for all product images with correct URLs that work in the application
         const SAMPLE_PRODUCTS: Product[] = [
           {
             id: '1',
             name: 'NeuroLink Pro',
             description: 'Advanced neural interface for direct mind-computer connection',
             price: 7999.99,
-            image_url: '/lovable-uploads/3a86ae91-04be-4f11-a913-0c5d0b7449e7.png',
+            image_url: '/placeholder.svg', // Fallback to placeholder
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -52,7 +53,7 @@ export const useProducts = () => {
             name: 'Titan Arm X1',
             description: 'Military-grade cybernetic arm with enhanced strength and precision',
             price: 8499.99,
-            image_url: '/lovable-uploads/43985206-5e19-4809-b47c-d431fcd37a8b.png',
+            image_url: '/placeholder.svg', // Fallback to placeholder
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
@@ -71,7 +72,7 @@ export const useProducts = () => {
             name: 'Eagle Eye V5',
             description: 'Cybernetic eye enhancement with 100x zoom and night vision',
             price: 5999.99,
-            image_url: '/lovable-uploads/4e426a60-1ee1-46f8-866a-c0aeb7e85a03.png',
+            image_url: '/placeholder.svg', // Fallback to placeholder
             category_id: '3',
             created_at: new Date().toISOString(),
             features: {
@@ -90,7 +91,7 @@ export const useProducts = () => {
             name: 'CardioTech Heart',
             description: 'Synthetic heart with 300% efficiency compared to biological hearts',
             price: 9999.99,
-            image_url: '/lovable-uploads/98f84e23-3c01-41e3-8da5-eb3167a88808.png',
+            image_url: '/placeholder.svg', // Fallback to placeholder
             category_id: '4',
             created_at: new Date().toISOString(),
             features: {
@@ -109,7 +110,7 @@ export const useProducts = () => {
             name: 'CortexCore Neural Interface',
             description: 'Direct neural interface with advanced AI integration capabilities',
             price: 8299.99,
-            image_url: '/lovable-uploads/29ad6e52-ac88-4c7f-bcfe-9e46c00e06ad.png',
+            image_url: '/placeholder.svg', // Fallback to placeholder
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -128,7 +129,7 @@ export const useProducts = () => {
             name: 'Precision Hand MK-II',
             description: 'Ultra-precise cybernetic hand with tactile feedback system',
             price: 7599.99,
-            image_url: '/lovable-uploads/7a20f903-764b-43b1-be16-549204fce447.png',
+            image_url: '/placeholder.svg', // Fallback to placeholder
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
