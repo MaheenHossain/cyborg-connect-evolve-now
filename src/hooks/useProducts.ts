@@ -29,33 +29,11 @@ export const useProducts = () => {
       try {
         const SAMPLE_PRODUCTS: Product[] = [
           {
-            id: 'special-1',
-            name: 'Quantum Arc Reactor',
-            description: 'Revolutionary clean energy source with advanced neural interface capabilities. Our flagship product representing the pinnacle of human-machine integration.',
-            price: 25999.99,
-            image_url: 'https://images.unsplash.com/photo-1640999364546-3f715313dad1?q=80&w=1920&h=1280&auto=format&fit=crop',
-            category_id: '4',
-            created_at: new Date().toISOString(),
-            features: {
-              powerOutput: '3 gigajoules per second',
-              efficiency: '99.99%',
-              neuralInterface: 'Advanced AI integration',
-              durability: 'Self-regenerating palladium core'
-            },
-            technical_specs: {
-              dimensions: '8.9cm diameter x 4.2cm depth',
-              weight: '375g',
-              material: 'Vibranium-Palladium alloy',
-              cooling: 'Quantum state refrigeration'
-            },
-            special: true
-          },
-          {
             id: '1',
             name: 'NeuroLink Pro',
             description: 'Advanced neural interface for direct mind-computer connection',
             price: 7999.99,
-            image_url: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?q=80&w=1920&h=1280&auto=format&fit=crop',
+            image_url: '/lovable-uploads/3a86ae91-04be-4f11-a913-0c5d0b7449e7.png',
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -74,7 +52,7 @@ export const useProducts = () => {
             name: 'Titan Arm X1',
             description: 'Military-grade cybernetic arm with enhanced strength and precision',
             price: 8499.99,
-            image_url: 'https://images.unsplash.com/photo-1594608661623-aa0bd3a69799?q=80&w=1920&h=1280&auto=format&fit=crop',
+            image_url: '/lovable-uploads/43985206-5e19-4809-b47c-d431fcd37a8b.png',
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
@@ -93,7 +71,7 @@ export const useProducts = () => {
             name: 'Eagle Eye V5',
             description: 'Cybernetic eye enhancement with 100x zoom and night vision',
             price: 5999.99,
-            image_url: 'https://images.unsplash.com/photo-1562115911-97eff4294215?q=80&w=1920&h=1280&auto=format&fit=crop',
+            image_url: '/lovable-uploads/4e426a60-1ee1-46f8-866a-c0aeb7e85a03.png',
             category_id: '3',
             created_at: new Date().toISOString(),
             features: {
@@ -112,7 +90,7 @@ export const useProducts = () => {
             name: 'CardioTech Heart',
             description: 'Synthetic heart with 300% efficiency compared to biological hearts',
             price: 9999.99,
-            image_url: 'https://images.unsplash.com/photo-1628595351029-c2bf17511435?q=80&w=1920&h=1280&auto=format&fit=crop',
+            image_url: '/lovable-uploads/98f84e23-3c01-41e3-8da5-eb3167a88808.png',
             category_id: '4',
             created_at: new Date().toISOString(),
             features: {
@@ -131,7 +109,7 @@ export const useProducts = () => {
             name: 'CortexCore Neural Interface',
             description: 'Direct neural interface with advanced AI integration capabilities',
             price: 8299.99,
-            image_url: 'https://images.unsplash.com/photo-1647427060118-4911c9821b82?q=80&w=1920&h=1280&auto=format&fit=crop',
+            image_url: '/lovable-uploads/29ad6e52-ac88-4c7f-bcfe-9e46c00e06ad.png',
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -150,7 +128,7 @@ export const useProducts = () => {
             name: 'Precision Hand MK-II',
             description: 'Ultra-precise cybernetic hand with tactile feedback system',
             price: 7599.99,
-            image_url: 'https://images.unsplash.com/photo-1562115909-9cb242397304?q=80&w=1920&h=1280&auto=format&fit=crop',
+            image_url: '/lovable-uploads/7a20f903-764b-43b1-be16-549204fce447.png',
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
