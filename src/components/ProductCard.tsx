@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { ShoppingCart, Eye, ChevronDown, ChevronUp, ImageIcon } from 'lucide-react';
 import { Product } from '@/types/product';
 import { motion } from 'framer-motion';
 
@@ -15,6 +15,16 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNow, onClick }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  
+  const handleImageError = () => {
+    setImageError(true);
+  };
+  
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
   
   return (
     <motion.div 
@@ -33,14 +43,32 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
       
       <Card className="bg-black/40 border border-blue-900/50 overflow-hidden h-full flex flex-col hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
         <CardHeader className="p-0 relative">
-          <div className="h-56 overflow-hidden bg-gradient-to-b from-blue-900/20 to-cyan-900/20">
-            <motion.img
-              src={product.image_url}
-              alt={product.name}
-              className="w-full h-full object-cover object-center"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            />
+          <div className="h-56 overflow-hidden bg-gradient-to-b from-blue-900/20 to-cyan-900/20 relative">
+            {!imageLoaded && !imageError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-10">
+                <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+            
+            {imageError ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="text-center">
+                  <ImageIcon className="h-16 w-16 mx-auto text-blue-500/50" />
+                  <p className="text-sm text-gray-400 mt-2">{product.name}</p>
+                </div>
+              </div>
+            ) : (
+              <motion.img
+                src={product.image_url}
+                alt={product.name}
+                className={`w-full h-full object-cover object-center transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onError={handleImageError}
+                onLoad={handleImageLoad}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              />
+            )}
+            
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
               <Button variant="ghost" size="sm" className="text-white hover:bg-blue-500/30">
                 <Eye className="mr-2 h-4 w-4" />

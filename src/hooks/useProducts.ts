@@ -3,10 +3,21 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Category, Product } from '@/types/product';
 
+// Define image paths for each product
+const productImages = {
+  'NeuroLink Pro': '/neuro-link-pro.png',
+  'Titan Arm X1': '/titan-arm.png',
+  'Eagle Eye V5': '/eagle-eye.png',
+  'CardioTech Heart': '/cardio-tech.png',
+  'CortexCore Neural Interface': '/cortex-core.png',
+  'Precision Hand MK-II': '/precision-hand.png'
+};
+
 export const useProducts = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -27,14 +38,14 @@ export const useProducts = () => {
 
     const fetchProducts = async () => {
       try {
-        // Updated paths for all product images with correct URLs that work in the application
+        // Sample products with correctly mapped image URLs
         const SAMPLE_PRODUCTS: Product[] = [
           {
             id: '1',
             name: 'NeuroLink Pro',
             description: 'Advanced neural interface for direct mind-computer connection',
             price: 7999.99,
-            image_url: '/placeholder.svg', // Fallback to placeholder
+            image_url: productImages['NeuroLink Pro'],
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -53,7 +64,7 @@ export const useProducts = () => {
             name: 'Titan Arm X1',
             description: 'Military-grade cybernetic arm with enhanced strength and precision',
             price: 8499.99,
-            image_url: '/placeholder.svg', // Fallback to placeholder
+            image_url: productImages['Titan Arm X1'],
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
@@ -72,7 +83,7 @@ export const useProducts = () => {
             name: 'Eagle Eye V5',
             description: 'Cybernetic eye enhancement with 100x zoom and night vision',
             price: 5999.99,
-            image_url: '/placeholder.svg', // Fallback to placeholder
+            image_url: productImages['Eagle Eye V5'],
             category_id: '3',
             created_at: new Date().toISOString(),
             features: {
@@ -91,7 +102,7 @@ export const useProducts = () => {
             name: 'CardioTech Heart',
             description: 'Synthetic heart with 300% efficiency compared to biological hearts',
             price: 9999.99,
-            image_url: '/placeholder.svg', // Fallback to placeholder
+            image_url: productImages['CardioTech Heart'],
             category_id: '4',
             created_at: new Date().toISOString(),
             features: {
@@ -110,7 +121,7 @@ export const useProducts = () => {
             name: 'CortexCore Neural Interface',
             description: 'Direct neural interface with advanced AI integration capabilities',
             price: 8299.99,
-            image_url: '/placeholder.svg', // Fallback to placeholder
+            image_url: productImages['CortexCore Neural Interface'],
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -129,7 +140,7 @@ export const useProducts = () => {
             name: 'Precision Hand MK-II',
             description: 'Ultra-precise cybernetic hand with tactile feedback system',
             price: 7599.99,
-            image_url: '/placeholder.svg', // Fallback to placeholder
+            image_url: productImages['Precision Hand MK-II'],
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
@@ -144,7 +155,32 @@ export const useProducts = () => {
             },
           }
         ];
-        setProducts(SAMPLE_PRODUCTS);
+
+        // Check each image and fallback to placeholder if it doesn't load
+        const productsWithImageFallbacks = SAMPLE_PRODUCTS.map(product => {
+          const img = new Image();
+          img.src = product.image_url || '';
+          
+          img.onload = () => {
+            setImagesLoaded(prev => ({
+              ...prev,
+              [product.id]: true
+            }));
+          };
+          
+          img.onerror = () => {
+            console.log(`Failed to load image for ${product.name}, using placeholder`);
+            product.image_url = '/placeholder.svg';
+            setImagesLoaded(prev => ({
+              ...prev,
+              [product.id]: true
+            }));
+          };
+          
+          return product;
+        });
+        
+        setProducts(productsWithImageFallbacks);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -162,6 +198,7 @@ export const useProducts = () => {
     categories,
     filteredProducts,
     selectedCategory,
-    setSelectedCategory
+    setSelectedCategory,
+    imagesLoaded
   };
 };
