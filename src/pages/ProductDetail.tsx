@@ -9,6 +9,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Tables } from '@/integrations/supabase/types';
 import { supabase } from '@/integrations/supabase/client';
+import { imageExists, parseImageSrc } from '@/utils/imageUtils';
 
 type Product = Tables<'products'>;
 
@@ -16,13 +17,23 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        // In a real app, we'd fetch from Supabase
+        // Define image paths for each product with the new uploaded images
+        const productImages = {
+          'NeuroLink Pro': '/lovable-uploads/d343cf65-8e74-4006-ac07-2d711465c17c.png', // Brain enhancement
+          'Titan Arm X1': '/lovable-uploads/e40d22d7-6aff-4eaa-b027-8229d240733f.png', // Robotic arm
+          'Eagle Eye V5': '/lovable-uploads/713b0aed-b5be-48fd-98b1-6b0631f35f24.png', // Helmet with display
+          'CardioTech Heart': '/lovable-uploads/b485ed22-6e72-4f38-a1bb-5e9ebc17a884.png', // Mechanical heart
+          'CortexCore Neural Interface': '/lovable-uploads/86c31ae0-a401-4d9d-85de-bd884578a3e7.png', // AI head profile
+          'Precision Hand MK-II': '/lovable-uploads/2300ed75-7f6d-4ae7-847b-4c89e2107b1c.png', // Robotic hand
+        };
+
         // For now, we'll use our sample data
         const SAMPLE_PRODUCTS = [
           {
@@ -30,7 +41,7 @@ const ProductDetail = () => {
             name: 'NeuroLink Pro',
             description: 'Advanced neural interface for direct mind-computer connection',
             price: 7999.99,
-            image_url: '/product-neurolink.png',
+            image_url: productImages['NeuroLink Pro'],
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -49,7 +60,7 @@ const ProductDetail = () => {
             name: 'Titan Arm X1',
             description: 'Military-grade cybernetic arm with enhanced strength and precision',
             price: 8499.99,
-            image_url: '/product-arm.png',
+            image_url: productImages['Titan Arm X1'],
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
@@ -68,7 +79,7 @@ const ProductDetail = () => {
             name: 'Eagle Eye V5',
             description: 'Cybernetic eye enhancement with 100x zoom and night vision',
             price: 5999.99,
-            image_url: '/product-eye.png',
+            image_url: productImages['Eagle Eye V5'],
             category_id: '3',
             created_at: new Date().toISOString(),
             features: {
@@ -87,7 +98,7 @@ const ProductDetail = () => {
             name: 'CardioTech Heart',
             description: 'Synthetic heart with 300% efficiency compared to biological hearts',
             price: 9999.99,
-            image_url: '/product-heart.png',
+            image_url: productImages['CardioTech Heart'],
             category_id: '4',
             created_at: new Date().toISOString(),
             features: {
@@ -106,7 +117,7 @@ const ProductDetail = () => {
             name: 'CortexCore Neural Interface',
             description: 'Direct neural interface with advanced AI integration capabilities',
             price: 8299.99,
-            image_url: 'public/lovable-uploads/ca96e439-a3bd-41ef-8083-b60732aa9d27.png',
+            image_url: productImages['CortexCore Neural Interface'],
             category_id: '1',
             created_at: new Date().toISOString(),
             features: {
@@ -125,7 +136,7 @@ const ProductDetail = () => {
             name: 'Precision Hand MK-II',
             description: 'Ultra-precise cybernetic hand with tactile feedback system',
             price: 7599.99,
-            image_url: 'public/lovable-uploads/8cf69124-7ee1-4d6e-a84f-c0f7b0004e3c.png',
+            image_url: productImages['Precision Hand MK-II'],
             category_id: '2',
             created_at: new Date().toISOString(),
             features: {
@@ -143,7 +154,14 @@ const ProductDetail = () => {
         
         const foundProduct = SAMPLE_PRODUCTS.find(p => p.id === id);
         if (foundProduct) {
+          // Ensure the image path is correct
+          foundProduct.image_url = parseImageSrc(foundProduct.image_url, foundProduct.name);
+          
           setProduct(foundProduct);
+          
+          // Check if the image exists
+          const exists = await imageExists(foundProduct.image_url);
+          setImageLoaded(exists);
         }
       } catch (error) {
         console.error('Error fetching product:', error);
@@ -222,13 +240,20 @@ const ProductDetail = () => {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
+              {!imageLoaded && (
+                <div className="w-full h-96 flex items-center justify-center bg-gradient-to-b from-blue-900/20 to-cyan-900/20">
+                  <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
               <motion.img
                 src={product.image_url}
                 alt={product.name}
-                className="w-full h-auto object-contain rounded-lg"
+                className={`w-full h-auto object-contain rounded-lg ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                 initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
+                animate={{ scale: imageLoaded ? 1 : 0.9, opacity: imageLoaded ? 1 : 0 }}
                 transition={{ duration: 0.5 }}
+                onLoad={() => setImageLoaded(true)}
+                onError={() => setImageLoaded(false)}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
             </motion.div>

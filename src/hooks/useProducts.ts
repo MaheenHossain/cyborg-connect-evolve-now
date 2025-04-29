@@ -2,15 +2,16 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Category, Product } from '@/types/product';
+import { imageExists, parseImageSrc } from '@/utils/imageUtils';
 
-// Define image paths for each product
+// Define image paths for each product with the new uploaded images
 const productImages = {
-  'NeuroLink Pro': '/neuro-link-pro.png',
-  'Titan Arm X1': '/titan-arm.png',
-  'Eagle Eye V5': '/eagle-eye.png',
-  'CardioTech Heart': '/cardio-tech.png',
-  'CortexCore Neural Interface': '/cortex-core.png',
-  'Precision Hand MK-II': '/precision-hand.png'
+  'NeuroLink Pro': '/lovable-uploads/d343cf65-8e74-4006-ac07-2d711465c17c.png', // Brain enhancement
+  'Titan Arm X1': '/lovable-uploads/e40d22d7-6aff-4eaa-b027-8229d240733f.png', // Robotic arm
+  'Eagle Eye V5': '/lovable-uploads/713b0aed-b5be-48fd-98b1-6b0631f35f24.png', // Helmet with display
+  'CardioTech Heart': '/lovable-uploads/b485ed22-6e72-4f38-a1bb-5e9ebc17a884.png', // Mechanical heart
+  'CortexCore Neural Interface': '/lovable-uploads/86c31ae0-a401-4d9d-85de-bd884578a3e7.png', // AI head profile
+  'Precision Hand MK-II': '/lovable-uploads/2300ed75-7f6d-4ae7-847b-4c89e2107b1c.png', // Robotic hand
 };
 
 export const useProducts = () => {
@@ -156,33 +157,30 @@ export const useProducts = () => {
           }
         ];
 
-        // Check each image and fallback to placeholder if it doesn't load
-        const productsWithImageFallbacks = SAMPLE_PRODUCTS.map(product => {
-          const img = new Image();
-          img.src = product.image_url || '';
-          
-          img.onload = () => {
+        // Use our imageUtils to verify and handle images
+        const productsWithVerifiedImages = await Promise.all(
+          SAMPLE_PRODUCTS.map(async (product) => {
+            const imageSrc = parseImageSrc(product.image_url, product.name);
+            const imageLoaded = await imageExists(imageSrc);
+
+            // Update image_url with verified path
+            product.image_url = imageSrc;
+
+            // Update loaded state
             setImagesLoaded(prev => ({
               ...prev,
-              [product.id]: true
+              [product.id]: imageLoaded
             }));
-          };
-          
-          img.onerror = () => {
-            console.log(`Failed to load image for ${product.name}, using placeholder`);
-            product.image_url = '/placeholder.svg';
-            setImagesLoaded(prev => ({
-              ...prev,
-              [product.id]: true
-            }));
-          };
-          
-          return product;
-        });
+            
+            console.log(`Image for ${product.name}: ${imageLoaded ? 'loaded successfully' : 'failed to load'}`);
+            
+            return product;
+          })
+        );
         
-        setProducts(productsWithImageFallbacks);
+        setProducts(productsWithVerifiedImages);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error preparing products:', error);
       }
     };
 
