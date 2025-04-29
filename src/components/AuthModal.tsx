@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useForm } from 'react-hook-form';
@@ -37,6 +36,7 @@ const signUpSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
   confirmPassword: z.string().min(6, { message: 'Confirm password is required' }),
+  fullName: z.string().min(1, { message: 'Full name is required' })
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -44,6 +44,7 @@ const signUpSchema = z.object({
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, product }) => {
   const [activeTab, setActiveTab] = useState('signin');
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const signInForm = useForm<z.infer<typeof signInSchema>>({
@@ -60,10 +61,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, produ
       email: '',
       password: '',
       confirmPassword: '',
+      fullName: '',
     },
   });
 
   const onSignIn = async (values: z.infer<typeof signInSchema>) => {
+    setIsLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email: values.email,
@@ -84,14 +87,22 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, produ
         description: error.message || "Please check your credentials and try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onSignUp = async (values: z.infer<typeof signUpSchema>) => {
+    setIsLoading(true);
     try {
       const { error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
+        options: {
+          data: {
+            full_name: values.fullName
+          }
+        }
       });
 
       if (error) throw error;
@@ -108,6 +119,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, produ
         description: error.message || "There was a problem creating your account.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -172,8 +185,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, produ
                 <Button 
                   type="submit" 
                   className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
+                  disabled={isLoading}
                 >
-                  Sign In
+                  {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
             </Form>
@@ -182,6 +196,24 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, produ
           <TabsContent value="signup" className="space-y-4 mt-4">
             <Form {...signUpForm}>
               <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="space-y-4">
+                <FormField
+                  control={signUpForm.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="enter your full name" 
+                          {...field} 
+                          className="bg-gray-900 border-gray-700"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={signUpForm.control}
                   name="email"
@@ -241,8 +273,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, produ
                 <Button 
                   type="submit" 
                   className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
+                  disabled={isLoading}
                 >
-                  Sign Up
+                  {isLoading ? "Signing up..." : "Sign Up"}
                 </Button>
               </form>
             </Form>

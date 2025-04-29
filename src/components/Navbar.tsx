@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Menu, X, User } from 'lucide-react';
+import { ShoppingCart, Menu, X, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import AuthModal from '@/components/AuthModal';
+import { useToast } from '@/components/ui/use-toast';
 
 interface NavbarProps {
   onCartClick: () => void;
@@ -15,6 +16,8 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [user, setUser] = useState(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,11 +25,52 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user || null);
+        
+        if (event === 'SIGNED_IN') {
+          toast({
+            title: "Signed in successfully",
+            description: "Welcome to Cybrix Core.",
+          });
+        } else if (event === 'SIGNED_OUT') {
+          toast({
+            title: "Signed out",
+            description: "You have been signed out.",
+          });
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      subscription.unsubscribe();
+    };
+  }, [toast]);
 
   const handleSignIn = () => {
     setShowAuthModal(true);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleAuthSuccess = () => {
@@ -59,14 +103,25 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
           <Link to="/" className="hover:text-cyan-400 transition-colors">Home</Link>
           <a href="#products" className="hover:text-cyan-400 transition-colors">Products</a>
           <a href="#about" className="hover:text-cyan-400 transition-colors">About</a>
-          <Button 
-            onClick={handleSignIn}
-            variant="ghost" 
-            className="hover:bg-blue-800/20 transition-colors flex items-center gap-2"
-          >
-            <User className="w-4 h-4" />
-            Sign In
-          </Button>
+          {user ? (
+            <Button 
+              onClick={handleSignOut}
+              variant="ghost" 
+              className="hover:bg-blue-800/20 transition-colors flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
+          ) : (
+            <Button 
+              onClick={handleSignIn}
+              variant="ghost" 
+              className="hover:bg-blue-800/20 transition-colors flex items-center gap-2"
+            >
+              <User className="w-4 h-4" />
+              Sign In
+            </Button>
+          )}
           <Button 
             onClick={onCartClick}
             variant="ghost" 
@@ -83,14 +138,25 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
         </div>
 
         <div className="md:hidden flex items-center gap-2">
-          <Button 
-            onClick={handleSignIn}
-            variant="ghost" 
-            size="icon"
-            className="hover:bg-blue-800/20"
-          >
-            <User className="w-5 h-5" />
-          </Button>
+          {user ? (
+            <Button 
+              onClick={handleSignOut}
+              variant="ghost" 
+              size="icon"
+              className="hover:bg-blue-800/20"
+            >
+              <LogOut className="w-5 h-5" />
+            </Button>
+          ) : (
+            <Button 
+              onClick={handleSignIn}
+              variant="ghost" 
+              size="icon"
+              className="hover:bg-blue-800/20"
+            >
+              <User className="w-5 h-5" />
+            </Button>
+          )}
           <Button 
             onClick={onCartClick} 
             variant="ghost" 
