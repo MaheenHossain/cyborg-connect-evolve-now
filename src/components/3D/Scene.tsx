@@ -3,13 +3,12 @@ import { Canvas } from '@react-three/fiber';
 import { 
   OrbitControls, 
   PerspectiveCamera, 
-  Environment, 
   Float, 
   Sparkles,
   Grid,
   useDetectGPU
 } from '@react-three/drei';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useTransition } from 'react';
 import { ArcReactor } from '../models/ArcReactor';
 import { CyborgModel } from '../models/CyborgModel';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -101,6 +100,16 @@ const AmbientParticles = ({ isMobile }: { isMobile: boolean }) => {
   );
 };
 
+// Loading component inside canvas
+const CanvasLoader = () => {
+  return (
+    <mesh position={[0, 0, 0]}>
+      <sphereGeometry args={[0.5, 16, 16]} />
+      <meshBasicMaterial color="#4a9eff" wireframe />
+    </mesh>
+  );
+};
+
 // Fallback component when WebGL is not available or performance is poor
 const FallbackDisplay = () => {
   return (
@@ -151,6 +160,19 @@ const CustomEnvironment = () => {
   );
 };
 
+// Lazy loaded model component to prevent suspension during initial render
+const ModelComponent = ({ modelType }: { modelType: 'arcReactor' | 'cyborgModel' }) => {
+  return (
+    <Float
+      speed={1.5}
+      rotationIntensity={0.5}
+      floatIntensity={0.5}
+    >
+      {modelType === 'arcReactor' ? <ArcReactor /> : <CyborgModel />}
+    </Float>
+  );
+};
+
 type SceneProps = {
   model: 'arcReactor' | 'cyborgModel';
 };
@@ -158,17 +180,39 @@ type SceneProps = {
 export const Scene: React.FC<SceneProps> = ({ model }) => {
   const isMobile = useIsMobile();
   const [hasWebGLContext, setHasWebGLContext] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isPending, startTransition] = useTransition();
   const gpuInfo = useDetectGPU();
 
+  // Check for WebGL support
   useEffect(() => {
-    // Check if WebGL is available
-    try {
-      const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      setHasWebGLContext(!!gl);
-    } catch (e) {
-      setHasWebGLContext(false);
-    }
+    const checkWebGL = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        
+        if (!gl) {
+          console.log('WebGL not supported');
+          setHasWebGLContext(false);
+          return false;
+        }
+        
+        return true;
+      } catch (e) {
+        console.log('Error checking WebGL support:', e);
+        setHasWebGLContext(false);
+        return false;
+      }
+    };
+
+    // Use startTransition for the WebGL check to avoid suspension
+    startTransition(() => {
+      const hasWebGL = checkWebGL();
+      if (hasWebGL) {
+        // Add a small delay to ensure everything is ready
+        setTimeout(() => setIsLoading(false), 100);
+      }
+    });
   }, []);
 
   // If WebGL is not available or GPU tier is too low, show fallback
@@ -177,49 +221,54 @@ export const Scene: React.FC<SceneProps> = ({ model }) => {
   }
 
   return (
-    <Canvas 
-      className="w-full h-full" 
-      shadows={!isMobile}
-      dpr={[1, isMobile ? 1.5 : 2]} // Lower resolution on mobile
-      gl={{ 
-        powerPreference: "high-performance",
-        antialias: !isMobile,
-        depth: true,
-        stencil: false,
-        alpha: true,
-      }}
-      onCreated={({ gl }) => {
-        gl.setClearColor(new THREE.Color('#050810'));
-      }}
-    >
-      <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-      <OrbitControls 
-        enableZoom={false} 
-        enablePan={false}
-        minPolarAngle={Math.PI / 3}
-        maxPolarAngle={Math.PI / 1.8}
-        rotateSpeed={0.5}
-        enableDamping={true}
-        dampingFactor={0.05}
-      />
+    <div className="w-full h-full relative">
+      {/* Show loading state during scene initialization */}
+      {isLoading && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-radial from-blue-900/20 to-black/80">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
       
-      {/* Replace Environment with custom lighting setup */}
-      <CustomEnvironment />
-      
-      <Suspense fallback={null}>
-        <Float
-          speed={1.5}
-          rotationIntensity={0.5}
-          floatIntensity={0.5}
-        >
-          {model === 'arcReactor' ? <ArcReactor /> : <CyborgModel />}
-        </Float>
+      <Canvas 
+        className="w-full h-full" 
+        shadows={!isMobile}
+        dpr={[1, isMobile ? 1.5 : 2]} // Lower resolution on mobile
+        gl={{ 
+          powerPreference: "high-performance",
+          antialias: !isMobile,
+          depth: true,
+          stencil: false,
+          alpha: true,
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(new THREE.Color('#050810'));
+          startTransition(() => setIsLoading(false));
+        }}
+      >
+        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+        <OrbitControls 
+          enableZoom={false} 
+          enablePan={false}
+          minPolarAngle={Math.PI / 3}
+          maxPolarAngle={Math.PI / 1.8}
+          rotateSpeed={0.5}
+          enableDamping={true}
+          dampingFactor={0.05}
+        />
         
-        <CyberPlatform />
-        <HolographicRings isMobile={isMobile} />
-        <AmbientParticles isMobile={isMobile} />
-      </Suspense>
-    </Canvas>
+        {/* Custom lighting setup */}
+        <CustomEnvironment />
+        
+        {/* Wrap 3D content in Suspense with a simple fallback */}
+        <Suspense fallback={<CanvasLoader />}>
+          {/* Use ModelComponent to prevent suspension during initial render */}
+          <ModelComponent modelType={model} />
+          
+          <CyberPlatform />
+          <HolographicRings isMobile={isMobile} />
+          <AmbientParticles isMobile={isMobile} />
+        </Suspense>
+      </Canvas>
+    </div>
   );
 };
-
