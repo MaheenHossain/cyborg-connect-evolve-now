@@ -116,6 +116,41 @@ const FallbackDisplay = () => {
   );
 };
 
+// Custom environment to replace the Environment component
+const CustomEnvironment = () => {
+  return (
+    <>
+      {/* Ambient light for base illumination */}
+      <ambientLight intensity={0.3} />
+      
+      {/* Key light (primary directional light) */}
+      <directionalLight 
+        position={[5, 5, 5]} 
+        intensity={0.8} 
+        color="#ffffff" 
+      />
+      
+      {/* Fill light (secondary, softer light) */}
+      <directionalLight 
+        position={[-5, 3, -5]} 
+        intensity={0.4} 
+        color="#a0a0ff" 
+      />
+      
+      {/* Rim light for edge highlighting */}
+      <directionalLight 
+        position={[0, -5, 0]} 
+        intensity={0.3} 
+        color="#0077ff" 
+      />
+      
+      {/* Point lights for additional accents */}
+      <pointLight position={[2, 2, 2]} intensity={0.5} color="#4a9eff" />
+      <pointLight position={[-2, 1, -2]} intensity={0.3} color="#aa00ff" />
+    </>
+  );
+};
+
 type SceneProps = {
   model: 'arcReactor' | 'cyborgModel';
 };
@@ -168,13 +203,8 @@ export const Scene: React.FC<SceneProps> = ({ model }) => {
         dampingFactor={0.05}
       />
       
-      <ambientLight intensity={0.5} />
-      <directionalLight 
-        position={[10, 10, 5]} 
-        intensity={1} 
-        castShadow={!isMobile}
-      />
-      <pointLight position={[0, 2, 2]} intensity={1} color="#4a9eff" />
+      {/* Replace Environment with custom lighting setup */}
+      <CustomEnvironment />
       
       <Suspense fallback={null}>
         <Float
@@ -188,9 +218,8 @@ export const Scene: React.FC<SceneProps> = ({ model }) => {
         <CyberPlatform />
         <HolographicRings isMobile={isMobile} />
         <AmbientParticles isMobile={isMobile} />
-        
-        <Environment preset="city" />
       </Suspense>
     </Canvas>
   );
 };
+
