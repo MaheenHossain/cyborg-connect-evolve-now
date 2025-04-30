@@ -1,24 +1,24 @@
 
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState, ReactNode } from "react";
 import { Lock } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 interface EncryptButtonProps {
-  onClick?: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
+  onClick: () => void;
   className?: string;
 }
 
 const TARGET_TEXT = "Add to Cart";
 const CYCLES_PER_LETTER = 2;
 const SHUFFLE_TIME = 50;
-
 const CHARS = "!@#$%^&*():{};|,.<>/?";
 
-const EncryptButton = ({ onClick, children, className = "" }: EncryptButtonProps) => {
+const EncryptButton = ({ children, onClick, className = "" }: EncryptButtonProps) => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const originalText = typeof children === 'string' ? children : TARGET_TEXT;
-  const [text, setText] = useState(originalText);
+  const [text, setText] = useState<string>(children as string);
+  const originalText = children as string;
 
   const scramble = () => {
     let pos = 0;
@@ -64,10 +64,10 @@ const EncryptButton = ({ onClick, children, className = "" }: EncryptButtonProps
       onMouseEnter={scramble}
       onMouseLeave={stopScramble}
       onClick={onClick}
-      className={`group relative overflow-hidden rounded-lg bg-neutral-700 px-4 py-2 font-mono font-medium uppercase text-neutral-300 transition-colors hover:text-blue-300 ${className}`}
+      className={`group relative overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-neutral-700 px-4 py-2 font-mono font-medium uppercase text-neutral-300 transition-colors hover:text-indigo-300 ${className}`}
     >
-      <div className="relative z-10 flex items-center gap-2">
-        <Lock className="w-4 h-4" />
+      <div className="relative z-10 flex items-center justify-center gap-2">
+        <Lock size={16} />
         <span>{text}</span>
       </div>
       <motion.span
@@ -83,7 +83,7 @@ const EncryptButton = ({ onClick, children, className = "" }: EncryptButtonProps
           duration: 1,
           ease: "linear",
         }}
-        className="duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-blue-400/0 from-40% via-blue-400/100 to-blue-400/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
+        className="duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-indigo-400/0 from-40% via-indigo-400/100 to-indigo-400/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
       />
     </motion.button>
   );

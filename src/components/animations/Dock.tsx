@@ -15,7 +15,7 @@ import {
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, ShoppingCart, User, Info, Star, Menu } from "lucide-react";
+import { Home, ShoppingCart, User, Info, Star } from "lucide-react";
 
 import "./Dock.css";
 
@@ -43,7 +43,7 @@ function DockItem({
   const ref = useRef<HTMLDivElement>(null);
   const isHovered = useMotionValue(0);
 
-  const mouseDistance = useTransform(mouseX, (val) => {
+  const mouseDistance = useTransform(mouseX, (val: number) => {
     const rect = ref.current?.getBoundingClientRect() ?? {
       x: 0,
       width: baseItemSize,

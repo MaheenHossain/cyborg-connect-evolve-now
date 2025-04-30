@@ -130,10 +130,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
         
         <CardFooter className="flex flex-col sm:flex-row gap-2 p-6 pt-0" onClick={(e) => e.stopPropagation()}>
           <EncryptButton 
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart();
-            }}
+            onClick={() => onAddToCart()}
             className="w-full sm:flex-1 hover:bg-blue-900/30"
           >
             Add to Cart
