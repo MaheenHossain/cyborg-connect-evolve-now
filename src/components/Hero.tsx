@@ -3,7 +3,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowDown } from 'lucide-react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Scene } from './3D/Scene';
 import { toast } from 'sonner';
 
 const Hero = () => {
@@ -25,9 +24,6 @@ const Hero = () => {
       productsSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
-  
-  // We're using 3D model instead of processed image since image is causing errors
-  const [use3DModel, setUse3DModel] = useState(true);
   
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -132,7 +128,6 @@ const Hero = () => {
         >
           <div className="relative w-full h-full">
             <div className="absolute inset-0 z-10 bg-gradient-radial from-transparent to-cyborg-dark opacity-50 pointer-events-none"></div>
-            <Scene model="cyborgModel" />
             
             <div className="absolute top-1/4 left-0 transform -translate-x-1/2 bg-black/50 backdrop-blur-sm border border-blue-500/30 px-3 py-2 rounded-lg text-xs text-blue-400 hidden lg:block">
               Neural Capacity: 12.8 TB

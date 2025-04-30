@@ -1,28 +1,37 @@
 
-import { useRef, useState, ReactNode } from "react";
+import React, { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Lock } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface EncryptButtonProps {
-  children: ReactNode;
-  onClick: () => void;
+  children: React.ReactNode;
+  onClick?: () => void;
   className?: string;
 }
 
+const TARGET_TEXT = "Add to Cart";
 const CYCLES_PER_LETTER = 2;
 const SHUFFLE_TIME = 50;
+
 const CHARS = "!@#$%^&*():{};|,.<>/?";
 
-const EncryptButton = ({ children, onClick, className = "" }: EncryptButtonProps) => {
+const EncryptButton: React.FC<EncryptButtonProps> = ({ 
+  children, 
+  onClick,
+  className = "" 
+}) => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [text, setText] = useState<string>(children as string);
-  const originalText = children as string;
+  const [text, setText] = useState<string>(
+    typeof children === "string" ? children : TARGET_TEXT
+  );
+  const displayText = typeof children === "string" ? children : TARGET_TEXT;
 
   const scramble = () => {
     let pos = 0;
 
     intervalRef.current = setInterval(() => {
-      const scrambled = originalText.split("")
+      const scrambled = displayText.split("")
         .map((char, index) => {
           if (pos / CYCLES_PER_LETTER > index) {
             return char;
@@ -38,7 +47,7 @@ const EncryptButton = ({ children, onClick, className = "" }: EncryptButtonProps
       setText(scrambled);
       pos++;
 
-      if (pos >= originalText.length * CYCLES_PER_LETTER) {
+      if (pos >= displayText.length * CYCLES_PER_LETTER) {
         stopScramble();
       }
     }, SHUFFLE_TIME);
@@ -48,42 +57,48 @@ const EncryptButton = ({ children, onClick, className = "" }: EncryptButtonProps
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-    setText(originalText);
+
+    setText(displayText);
   };
 
   return (
-    <motion.button
+    <motion.div
       whileHover={{
         scale: 1.025,
       }}
       whileTap={{
         scale: 0.975,
       }}
-      onMouseEnter={scramble}
-      onMouseLeave={stopScramble}
-      onClick={onClick}
-      className={`group relative overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-neutral-700 px-4 py-2 font-mono font-medium uppercase text-neutral-300 transition-colors hover:text-indigo-300 ${className}`}
+      className="relative"
     >
-      <div className="relative z-10 flex items-center justify-center gap-2">
-        <Lock size={16} />
-        <span>{text}</span>
-      </div>
-      <motion.span
-        initial={{
-          y: "100%",
-        }}
-        animate={{
-          y: "-100%",
-        }}
-        transition={{
-          repeat: Infinity,
-          repeatType: "mirror",
-          duration: 1,
-          ease: "linear",
-        }}
-        className="duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-indigo-400/0 from-40% via-indigo-400/100 to-indigo-400/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
-      />
-    </motion.button>
+      <Button
+        variant="outline"
+        onMouseEnter={scramble}
+        onMouseLeave={stopScramble}
+        onClick={onClick}
+        className={`group relative overflow-hidden border-neutral-500 bg-neutral-700 font-mono text-neutral-300 transition-colors hover:text-indigo-300 ${className}`}
+      >
+        <div className="relative z-10 flex items-center gap-2">
+          <Lock className="h-4 w-4" />
+          <span>{text}</span>
+        </div>
+        <motion.span
+          initial={{
+            y: "100%",
+          }}
+          animate={{
+            y: "-100%",
+          }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "mirror",
+            duration: 1,
+            ease: "linear",
+          }}
+          className="absolute inset-0 z-0 scale-125 bg-gradient-to-t from-indigo-400/0 from-40% via-indigo-400/100 to-indigo-400/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
+        />
+      </Button>
+    </motion.div>
   );
 };
 

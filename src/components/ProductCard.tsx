@@ -7,6 +7,7 @@ import { Product } from '@/types/product';
 import { motion } from 'framer-motion';
 import EncryptButton from './animations/EncryptButton';
 import PixelCard from './animations/PixelCard';
+import StarBorder from './animations/StarBorder';
 
 interface ProductCardProps {
   product: Product;
@@ -131,15 +132,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
             Add to Cart
           </EncryptButton>
           
-          <Button 
-            onClick={(e) => {
+          <StarBorder 
+            as={Button}
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               onBuyNow();
             }}
+            color="rgba(14, 165, 233, 0.6)"
             className="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
           >
             Buy Now
-          </Button>
+          </StarBorder>
         </CardFooter>
       </Card>
     </PixelCard>

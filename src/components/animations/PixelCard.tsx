@@ -164,6 +164,7 @@ interface PixelCardProps {
   noFocus?: boolean;
   className?: string;
   children: React.ReactNode;
+  onClick?: () => void; // Adding onClick prop
 }
 
 export default function PixelCard({
@@ -173,7 +174,8 @@ export default function PixelCard({
   colors,
   noFocus,
   className = "",
-  children
+  children,
+  onClick
 }: PixelCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -304,6 +306,7 @@ export default function PixelCard({
       onMouseLeave={onMouseLeave}
       onFocus={finalNoFocus ? undefined : onFocus}
       onBlur={finalNoFocus ? undefined : onBlur}
+      onClick={onClick}
       tabIndex={finalNoFocus ? -1 : 0}
     >
       <canvas

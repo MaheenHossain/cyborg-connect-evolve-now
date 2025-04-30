@@ -4,15 +4,20 @@ import { useState } from "react";
 
 interface ChipTabsProps {
   tabs: string[];
-  initialTab?: string;
+  defaultTab?: string;
   onTabChange?: (tab: string) => void;
   className?: string;
 }
 
-const ChipTabs = ({ tabs, initialTab, onTabChange, className = "" }: ChipTabsProps) => {
-  const [selected, setSelected] = useState(initialTab || tabs[0]);
+const ChipTabs = ({ 
+  tabs, 
+  defaultTab, 
+  onTabChange,
+  className = ""
+}: ChipTabsProps) => {
+  const [selected, setSelected] = useState(defaultTab || tabs[0]);
 
-  const handleTabChange = (tab: string) => {
+  const handleSelect = (tab: string) => {
     setSelected(tab);
     if (onTabChange) {
       onTabChange(tab);
@@ -25,7 +30,7 @@ const ChipTabs = ({ tabs, initialTab, onTabChange, className = "" }: ChipTabsPro
         <Chip
           text={tab}
           selected={selected === tab}
-          setSelected={handleTabChange}
+          setSelected={handleSelect}
           key={tab}
         />
       ))}
@@ -39,7 +44,11 @@ interface ChipProps {
   setSelected: (text: string) => void;
 }
 
-const Chip = ({ text, selected, setSelected }: ChipProps) => {
+const Chip = ({
+  text,
+  selected,
+  setSelected,
+}: ChipProps) => {
   return (
     <button
       onClick={() => setSelected(text)}
@@ -54,7 +63,7 @@ const Chip = ({ text, selected, setSelected }: ChipProps) => {
         <motion.span
           layoutId="pill-tab"
           transition={{ type: "spring", duration: 0.5 }}
-          className="absolute inset-0 z-0 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-md"
+          className="absolute inset-0 z-0 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-md"
         ></motion.span>
       )}
     </button>
