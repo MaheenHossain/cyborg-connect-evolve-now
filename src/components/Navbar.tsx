@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import AuthModal from '@/components/AuthModal';
 import { useToast } from '@/components/ui/use-toast';
+import { useCart } from '@/context/CartContext';
 
 interface NavbarProps {
   onCartClick: () => void;
@@ -14,10 +15,10 @@ interface NavbarProps {
 const Navbar = ({ onCartClick }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [user, setUser] = useState(null);
   const { toast } = useToast();
+  const { totalItems: cartCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {

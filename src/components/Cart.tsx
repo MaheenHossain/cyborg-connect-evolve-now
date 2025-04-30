@@ -12,14 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Trash2, Plus, Minus, ShoppingCart } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import AuthModal from '@/components/AuthModal';
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
+import { useCart } from '@/context/CartContext';
 
 interface CartProps {
   isOpen: boolean;
@@ -27,43 +20,9 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
-  // Placeholder cart items
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: '1',
-      name: 'NeuroLink Pro',
-      price: 7999.99,
-      image: '/product-neurolink.png',
-      quantity: 1,
-    },
-  ]);
-  
+  const { cartItems, removeFromCart, updateQuantity, totalItems, subtotal } = useCart();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { toast } = useToast();
-  
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  
-  const updateQuantity = (id: string, change: number) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id
-          ? { 
-              ...item, 
-              quantity: Math.max(1, item.quantity + change) 
-            }
-          : item
-      )
-    );
-  };
-  
-  const removeItem = (id: string) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-    toast({
-      title: "Item removed",
-      description: "The item has been removed from your cart.",
-    });
-  };
   
   const handleCheckout = () => {
     setShowAuthModal(true);
@@ -137,7 +96,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
                     <Button 
                       variant="ghost" 
                       size="icon"
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeFromCart(item.id)}
                       className="text-gray-400 hover:text-red-500"
                     >
                       <Trash2 className="h-5 w-5" />
