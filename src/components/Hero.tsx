@@ -1,9 +1,35 @@
 
-import React from 'react';
+import React, { Suspense, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import LetterGlitch from './animations/LetterGlitch';
-import Orb from './animations/Orb';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF, Environment, useAnimations } from '@react-three/drei';
+import * as THREE from 'three';
+import { CyborgHead } from './models/parts/CyborgHead';
+import { CyborgBody } from './models/parts/CyborgBody';
+import { CyborgArms } from './models/parts/CyborgArms';
+
+// Create a Cyborg component that assembles all parts
+const Cyborg = () => {
+  const groupRef = useRef();
+  
+  return (
+    <group ref={groupRef} position={[0, -1, 0]} rotation={[0, Math.PI * 0.25, 0]} scale={2.5}>
+      <CyborgHead />
+      <CyborgBody />
+      <CyborgArms />
+    </group>
+  );
+};
+
+// Loader component for suspense fallback
+const ModelLoader = () => (
+  <mesh>
+    <sphereGeometry args={[1, 16, 16]} />
+    <meshStandardMaterial color="#4a9eff" wireframe />
+  </mesh>
+);
 
 const Hero = () => {
   return (
@@ -11,8 +37,8 @@ const Hero = () => {
       <LetterGlitch
         glitchColors={['#2b4539', '#61dca3', '#61b3dc', '#8B5CF6']}
         glitchSpeed={50}
-        centerVignette={false}
-        outerVignette={true}
+        centerVignette={true}
+        outerVignette={false}
         smooth={true}
       />
       
@@ -37,7 +63,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-gray-300 max-w-xl"
+              className="text-xl font-medium bg-black/50 backdrop-blur-sm p-4 rounded-lg text-white max-w-xl border border-blue-900/30"
             >
               Experience the future with our cutting-edge cybernetic implants and augmentations. Designed to enhance human capabilities beyond natural limitations.
             </motion.p>
@@ -64,12 +90,22 @@ const Hero = () => {
             className="lg:w-1/2 flex justify-center"
           >
             <div className="w-full max-w-md aspect-square relative">
-              <Orb 
-                hoverIntensity={0.5}
-                rotateOnHover={true}
-                hue={200}
-                forceHoverState={false}
-              />
+              <Canvas shadows camera={{ position: [0, 0, 5], fov: 45 }}>
+                <color attach="background" args={['transparent']} />
+                <ambientLight intensity={0.5} />
+                <pointLight position={[10, 10, 10]} intensity={1} castShadow />
+                <pointLight position={[-10, -10, -10]} intensity={0.5} color="#4a9eff" />
+                <Suspense fallback={<ModelLoader />}>
+                  <Cyborg />
+                  <Environment preset="city" />
+                  <OrbitControls 
+                    enableZoom={false}
+                    enablePan={false}
+                    autoRotate
+                    autoRotateSpeed={1}
+                  />
+                </Suspense>
+              </Canvas>
             </div>
           </motion.div>
         </div>

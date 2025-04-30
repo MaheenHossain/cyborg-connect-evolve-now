@@ -10,6 +10,7 @@ import Footer from '@/components/Footer';
 import { Tables } from '@/integrations/supabase/types';
 import { supabase } from '@/integrations/supabase/client';
 import { imageExists, parseImageSrc } from '@/utils/imageUtils';
+import TempImageUploader from '@/components/TempImageUploader';
 
 type Product = Tables<'products'>;
 
@@ -18,6 +19,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [customImage, setCustomImage] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -184,6 +186,10 @@ const ProductDetail = () => {
     window.open('https://www.paypal.com', '_blank');
   };
 
+  const handleImageUpdate = (imageUrl: string | null) => {
+    setCustomImage(imageUrl);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-cyborg-dark flex items-center justify-center">
@@ -240,17 +246,17 @@ const ProductDetail = () => {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              {!imageLoaded && (
+              {!imageLoaded && !customImage && (
                 <div className="w-full h-96 flex items-center justify-center bg-gradient-to-b from-blue-900/20 to-cyan-900/20">
                   <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               )}
               <motion.img
-                src={product.image_url}
+                src={customImage || product.image_url}
                 alt={product.name}
-                className={`w-full h-auto object-contain rounded-lg ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                className={`w-full h-auto object-contain rounded-lg ${(imageLoaded || customImage) ? 'opacity-100' : 'opacity-0'}`}
                 initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: imageLoaded ? 1 : 0.9, opacity: imageLoaded ? 1 : 0 }}
+                animate={{ scale: (imageLoaded || customImage) ? 1 : 0.9, opacity: (imageLoaded || customImage) ? 1 : 0 }}
                 transition={{ duration: 0.5 }}
                 onLoad={() => setImageLoaded(true)}
                 onError={() => setImageLoaded(false)}
@@ -297,6 +303,9 @@ const ProductDetail = () => {
                   ${product.price.toFixed(2)}
                 </motion.div>
               </div>
+              
+              {/* Image Uploader */}
+              <TempImageUploader onImageUpdate={handleImageUpdate} />
               
               <motion.div 
                 className="space-y-6"
