@@ -1,7 +1,7 @@
+
 import { useEffect, useRef } from 'react';
 
 interface SplashCursorProps {
-  // You can customize these props
   SIM_RESOLUTION?: number;
   DYE_RESOLUTION?: number;
   CAPTURE_RESOLUTION?: number;
@@ -19,7 +19,6 @@ interface SplashCursorProps {
 }
 
 function SplashCursor({
-  // You can customize these props
   SIM_RESOLUTION = 128,
   DYE_RESOLUTION = 1440,
   CAPTURE_RESOLUTION = 512,
@@ -74,8 +73,10 @@ function SplashCursor({
 
     let pointers = [new (pointerPrototype as any)()];
 
+    // Define combined WebGL types to handle both WebGL1 and WebGL2
     type GLContext = WebGLRenderingContext | WebGL2RenderingContext;
     
+    // Define extension formats
     interface ExtensionFormat {
       internalFormat: number;
       format: number;
@@ -89,7 +90,16 @@ function SplashCursor({
       supportLinearFiltering: boolean;
     }
 
-    function getWebGLContext(canvas: HTMLCanvasElement): { gl: GLContext; ext: GLExtensions } {
+    // Custom WebGL context with added properties
+    interface ExtendedGLContext extends GLContext {
+      R16F?: number;
+      RG16F?: number;
+      RGBA16F?: number;
+      RED?: number;
+      RG?: number;
+    }
+
+    function getWebGLContext(canvas: HTMLCanvasElement): { gl: ExtendedGLContext; ext: GLExtensions } {
       const params = {
         alpha: true,
         depth: false,
@@ -98,12 +108,29 @@ function SplashCursor({
         preserveDrawingBuffer: false,
       };
       
-      let gl = canvas.getContext('webgl2', params) as WebGL2RenderingContext;
+      // Try to get WebGL2 context first
+      let gl = canvas.getContext('webgl2', params) as WebGL2RenderingContext | null;
       const isWebGL2 = !!gl;
       
+      // Fall back to WebGL1
       if (!isWebGL2) {
         gl = (canvas.getContext('webgl', params) ||
           canvas.getContext('experimental-webgl', params)) as WebGLRenderingContext;
+      }
+
+      if (!gl) {
+        throw new Error('WebGL not supported');
+      }
+
+      const extendedGL = gl as ExtendedGLContext;
+
+      // Define necessary constants for WebGL1
+      if (!isWebGL2) {
+        extendedGL.R16F = 33325; // R16F constant value
+        extendedGL.RG16F = 33327; // RG16F constant value
+        extendedGL.RGBA16F = 34842; // RGBA16F constant value
+        extendedGL.RED = 6403; // RED constant value
+        extendedGL.RG = 33319; // RG constant value
       }
 
       let halfFloat;
@@ -128,17 +155,19 @@ function SplashCursor({
       let formatR: ExtensionFormat;
 
       if (isWebGL2) {
-        formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType);
-        formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
-        formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
+        // For WebGL2, use the predefined constants
+        formatRGBA = getSupportedFormat(extendedGL, extendedGL.RGBA16F!, extendedGL.RGBA, halfFloatTexType);
+        formatRG = getSupportedFormat(extendedGL, extendedGL.RG16F!, extendedGL.RG!, halfFloatTexType);
+        formatR = getSupportedFormat(extendedGL, extendedGL.R16F!, extendedGL.RED!, halfFloatTexType);
       } else {
-        formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-        formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-        formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+        // For WebGL1, use the added constants
+        formatRGBA = getSupportedFormat(extendedGL, extendedGL.RGBA, extendedGL.RGBA, halfFloatTexType);
+        formatRG = getSupportedFormat(extendedGL, extendedGL.RGBA, extendedGL.RGBA, halfFloatTexType);
+        formatR = getSupportedFormat(extendedGL, extendedGL.RGBA, extendedGL.RGBA, halfFloatTexType);
       }
 
       return {
-        gl,
+        gl: extendedGL,
         ext: {
           formatRGBA,
           formatRG,
@@ -149,19 +178,18 @@ function SplashCursor({
       };
     }
 
-    function getSupportedFormat(gl: GLContext, internalFormat: number, format: number, type: number): ExtensionFormat {
+    function getSupportedFormat(gl: ExtendedGLContext, internalFormat: number, format: number, type: number): ExtensionFormat {
       if (!supportRenderTextureFormat(gl, internalFormat, format, type)) {
-        switch (internalFormat) {
-          case gl.R16F:
-          case gl.RED:
-            return getSupportedFormat(gl, gl.RG16F || gl.RGBA, gl.RG || gl.RGBA, type);
-          case gl.RG16F:
-          case gl.RG:
-            return getSupportedFormat(gl, gl.RGBA16F || gl.RGBA, gl.RGBA, type);
-          default:
-            return { internalFormat: gl.RGBA, format: gl.RGBA };
+        // Fall back to alternatives if the format is not supported
+        if (internalFormat === gl.R16F) {
+          return getSupportedFormat(gl, gl.RG16F!, gl.RG!, type);
         }
+        if (internalFormat === gl.RG16F) {
+          return getSupportedFormat(gl, gl.RGBA16F!, gl.RGBA, type);
+        }
+        return { internalFormat: gl.RGBA, format: gl.RGBA };
       }
+      
       return { internalFormat, format };
     }
 
@@ -197,9 +225,9 @@ function SplashCursor({
     class Material {
       vertexShader: WebGLShader;
       fragmentShaderSource: string;
-      programs: Array<WebGLProgram>;
+      programs: Array<WebGLProgram | null>;
       activeProgram: WebGLProgram | null;
-      uniforms: Record<string, WebGLUniformLocation>;
+      uniforms: Record<string, WebGLUniformLocation | null>;
       
       constructor(vertexShader: WebGLShader, fragmentShaderSource: string) {
         this.vertexShader = vertexShader;
@@ -235,7 +263,7 @@ function SplashCursor({
     }
 
     class Program {
-      uniforms: Record<string, WebGLUniformLocation>;
+      uniforms: Record<string, WebGLUniformLocation | null>;
       program: WebGLProgram;
       
       constructor(vertexShader: WebGLShader, fragmentShader: WebGLShader) {
@@ -261,13 +289,13 @@ function SplashCursor({
       return program;
     }
 
-    function getUniforms(program: WebGLProgram): Record<string, WebGLUniformLocation> {
-      const uniforms: Record<string, WebGLUniformLocation> = {};
+    function getUniforms(program: WebGLProgram): Record<string, WebGLUniformLocation | null> {
+      const uniforms: Record<string, WebGLUniformLocation | null> = {};
       const uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
       
       for (let i = 0; i < uniformCount; i++) {
         const uniformName = gl.getActiveUniform(program, i)!.name;
-        uniforms[uniformName] = gl.getUniformLocation(program, uniformName)!;
+        uniforms[uniformName] = gl.getUniformLocation(program, uniformName);
       }
       
       return uniforms;
@@ -589,6 +617,7 @@ function SplashCursor({
       `
     );
 
+    // Define FBO interface
     interface FBO {
       texture: WebGLTexture;
       fbo: WebGLFramebuffer;
@@ -598,7 +627,8 @@ function SplashCursor({
       texelSizeY: number;
       attach: (id: number) => number;
     }
-
+    
+    // Define DoubleFBO interface
     interface DoubleFBO {
       width: number;
       height: number;

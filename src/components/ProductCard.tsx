@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Eye, ChevronDown, ChevronUp, ImageIcon } from 'lucide-react';
+import { Eye, ChevronDown, ChevronUp, ImageIcon } from 'lucide-react';
 import { Product } from '@/types/product';
 import { motion } from 'framer-motion';
 import EncryptButton from './animations/EncryptButton';
+import PixelCard from './animations/PixelCard';
 
 interface ProductCardProps {
   product: Product;
@@ -28,13 +29,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
   };
   
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ y: -5 }}
-      onClick={onClick}
+    <PixelCard 
+      variant="blue" 
       className="cursor-pointer relative"
+      onClick={onClick}
     >
       {product.special && (
         <div className="absolute -top-4 -right-4 z-10 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">
@@ -87,10 +85,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={(e) => { 
-              e.stopPropagation();
-              setShowDetails(!showDetails);
-            }}
+            onClick={() => setShowDetails(!showDetails)}
             className="mt-4 flex items-center text-sm text-gray-400 hover:text-white"
           >
             {showDetails ? "Hide details" : "View details"}
@@ -130,7 +125,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
         
         <CardFooter className="flex flex-col sm:flex-row gap-2 p-6 pt-0" onClick={(e) => e.stopPropagation()}>
           <EncryptButton 
-            onClick={() => onAddToCart()}
+            onClick={onAddToCart}
             className="w-full sm:flex-1 hover:bg-blue-900/30"
           >
             Add to Cart
@@ -147,7 +142,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           </Button>
         </CardFooter>
       </Card>
-    </motion.div>
+    </PixelCard>
   );
 };
 

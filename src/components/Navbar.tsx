@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import AuthModal from '@/components/AuthModal';
 import { useToast } from '@/components/ui/use-toast';
 import { useCart } from '@/context/CartContext';
+import ChipTabs from './animations/ChipTabs';
+import StarBorder from './animations/StarBorder';
 
 interface NavbarProps {
   onCartClick: () => void;
@@ -78,6 +80,18 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
     setShowAuthModal(false);
   };
 
+  const handleTabChange = (tab: string) => {
+    if (tab === 'Home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (tab === 'Products') {
+      const element = document.querySelector("#products");
+      element?.scrollIntoView({ behavior: "smooth" });
+    } else if (tab === 'About') {
+      const element = document.querySelector("#about");
+      element?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <nav 
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
@@ -100,29 +114,36 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
           </span>
         </Link>
         
-        <div className="hidden md:flex items-center space-x-8">
-          <Link to="/" className="hover:text-cyan-400 transition-colors">Home</Link>
-          <a href="#products" className="hover:text-cyan-400 transition-colors">Products</a>
-          <a href="#about" className="hover:text-cyan-400 transition-colors">About</a>
+        <div className="hidden md:block mx-auto">
+          <ChipTabs 
+            tabs={["Home", "Products", "About"]} 
+            onTabChange={handleTabChange} 
+          />
+        </div>
+
+        <div className="flex items-center space-x-2">
           {user ? (
-            <Button 
+            <StarBorder 
+              as="button" 
               onClick={handleSignOut}
-              variant="ghost" 
-              className="hover:bg-blue-800/20 transition-colors flex items-center gap-2"
+              color="#0ea5e9"
+              className="hover:bg-blue-800/20 transition-colors flex items-center gap-2 px-4 py-2 rounded-md text-white"
             >
               <LogOut className="w-4 h-4" />
               Sign Out
-            </Button>
+            </StarBorder>
           ) : (
-            <Button 
+            <StarBorder 
+              as="button" 
               onClick={handleSignIn}
-              variant="ghost" 
-              className="hover:bg-blue-800/20 transition-colors flex items-center gap-2"
+              color="#0ea5e9"
+              className="hover:bg-blue-800/20 transition-colors flex items-center gap-2 px-4 py-2 rounded-md text-white"
             >
               <User className="w-4 h-4" />
               Sign In
-            </Button>
+            </StarBorder>
           )}
+          
           <Button 
             onClick={onCartClick}
             variant="ghost" 
@@ -136,46 +157,12 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
               </span>
             )}
           </Button>
-        </div>
 
-        <div className="md:hidden flex items-center gap-2">
-          {user ? (
-            <Button 
-              onClick={handleSignOut}
-              variant="ghost" 
-              size="icon"
-              className="hover:bg-blue-800/20"
-            >
-              <LogOut className="w-5 h-5" />
-            </Button>
-          ) : (
-            <Button 
-              onClick={handleSignIn}
-              variant="ghost" 
-              size="icon"
-              className="hover:bg-blue-800/20"
-            >
-              <User className="w-5 h-5" />
-            </Button>
-          )}
-          <Button 
-            onClick={onCartClick} 
-            variant="ghost" 
-            size="icon"
-            className="relative hover:bg-blue-800/20"
-          >
-            <ShoppingCart className="w-5 h-5" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </Button>
           <Button 
             onClick={() => setIsMenuOpen(!isMenuOpen)} 
             variant="ghost" 
             size="icon"
-            className="hover:bg-blue-800/20"
+            className="md:hidden hover:bg-blue-800/20"
           >
             {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
@@ -185,10 +172,15 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-black/95 backdrop-blur-md">
-          <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-            <Link to="/" className="py-2 hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <a href="#products" className="py-2 hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>Products</a>
-            <a href="#about" className="py-2 hover:text-cyan-400 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a>
+          <div className="container mx-auto px-4 py-4">
+            <ChipTabs 
+              tabs={["Home", "Products", "About"]} 
+              onTabChange={(tab) => {
+                handleTabChange(tab);
+                setIsMenuOpen(false);
+              }} 
+              className="justify-center"
+            />
           </div>
         </div>
       )}

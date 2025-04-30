@@ -2,7 +2,6 @@
 import { useRef, useState, ReactNode } from "react";
 import { Lock } from "lucide-react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 
 interface EncryptButtonProps {
   children: ReactNode;
@@ -10,7 +9,6 @@ interface EncryptButtonProps {
   className?: string;
 }
 
-const TARGET_TEXT = "Add to Cart";
 const CYCLES_PER_LETTER = 2;
 const SHUFFLE_TIME = 50;
 const CHARS = "!@#$%^&*():{};|,.<>/?";

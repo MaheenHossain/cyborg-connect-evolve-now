@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Scene } from './3D/Scene';
 import { Badge } from './ui/badge';
+import Orb from './animations/Orb';
+import StarBorder from './animations/StarBorder';
 
 const CoreTechnology = () => {
   return (
@@ -33,17 +34,16 @@ const CoreTechnology = () => {
         </motion.div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* 3D Model */}
+          {/* Orb Animation */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="h-[400px] w-full relative mb-8 lg:mb-0"
+            className="h-[400px] w-full relative mb-8 lg:mb-0 flex items-center justify-center"
           >
-            <div className="absolute inset-0 rounded-xl overflow-hidden">
-              <Scene model="arcReactor" />
+            <div className="w-[300px] h-[300px] relative">
+              <Orb hoverIntensity={0.5} rotateOnHover={true} hue={240} />
             </div>
-            <div className="absolute inset-0 bg-gradient-radial from-transparent to-black opacity-20 pointer-events-none"></div>
           </motion.div>
           
           {/* Details */}
@@ -72,17 +72,17 @@ const CoreTechnology = () => {
             </div>
             
             <div className="grid grid-cols-2 gap-6">
-              <div className="bg-blue-900/10 border border-blue-900/30 p-4 rounded-lg text-center">
+              <StarBorder color="#0ea5e9" className="bg-blue-900/10 border border-blue-900/30 p-4 rounded-lg text-center">
                 <h4 className="text-lg font-semibold text-blue-400 mb-2">Efficiency</h4>
                 <p className="text-4xl font-bold text-white">99.99%</p>
                 <p className="text-gray-400 text-sm">Energy conversion</p>
-              </div>
+              </StarBorder>
               
-              <div className="bg-blue-900/10 border border-blue-900/30 p-4 rounded-lg text-center">
+              <StarBorder color="#0ea5e9" className="bg-blue-900/10 border border-blue-900/30 p-4 rounded-lg text-center">
                 <h4 className="text-lg font-semibold text-blue-400 mb-2">Lifespan</h4>
                 <p className="text-4xl font-bold text-white">20+ yrs</p>
                 <p className="text-gray-400 text-sm">Self-regenerating</p>
-              </div>
+              </StarBorder>
             </div>
           </motion.div>
         </div>

@@ -9,7 +9,6 @@ import Footer from '@/components/Footer';
 import Cart from '@/components/Cart';
 import { motion, AnimatePresence } from 'framer-motion';
 import SplashCursor from '@/components/animations/SplashCursor';
-import Dock from '@/components/animations/Dock';
 
 const Index = () => {
   const [showCart, setShowCart] = React.useState(false);
@@ -52,8 +51,6 @@ const Index = () => {
           
           <Footer />
           <Cart isOpen={showCart} onClose={() => setShowCart(false)} />
-          
-          <Dock />
         </div>
       </motion.div>
     </AnimatePresence>
