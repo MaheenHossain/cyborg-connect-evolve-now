@@ -2,15 +2,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import SplashCursor from './animations/SplashCursor';
+import LetterGlitch from './animations/LetterGlitch';
 import Orb from './animations/Orb';
 
 const Hero = () => {
   return (
     <section id="hero" className="min-h-screen relative overflow-hidden flex items-center">
-      <div className="absolute inset-0 z-0">
-        <SplashCursor />
-      </div>
+      <LetterGlitch
+        glitchColors={['#2b4539', '#61dca3', '#61b3dc', '#8B5CF6']}
+        glitchSpeed={50}
+        centerVignette={false}
+        outerVignette={true}
+        smooth={true}
+      />
       
       <div className="container relative z-10 mx-auto px-4 py-24">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">

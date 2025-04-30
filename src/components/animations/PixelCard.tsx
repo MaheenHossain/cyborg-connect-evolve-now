@@ -1,16 +1,6 @@
+
 import { useEffect, useRef } from "react";
 import './PixelCard.css';
-
-interface PixelCardProps {
-  variant?: string;
-  gap?: number;
-  speed?: number;
-  colors?: string;
-  noFocus?: boolean;
-  className?: string;
-  children?: React.ReactNode;
-  onClick?: () => void;
-}
 
 class Pixel {
   width: number;
@@ -53,11 +43,11 @@ class Pixel {
     this.isShimmer = false;
   }
 
-  getRandomValue(min: number, max: number): number {
+  getRandomValue(min: number, max: number) {
     return Math.random() * (max - min) + min;
   }
 
-  draw(): void {
+  draw() {
     const centerOffset = this.maxSizeInteger * 0.5 - this.size * 0.5;
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(
@@ -68,7 +58,7 @@ class Pixel {
     );
   }
 
-  appear(): void {
+  appear() {
     this.isIdle = false;
     if (this.counter <= this.delay) {
       this.counter += this.counterStep;
@@ -85,7 +75,7 @@ class Pixel {
     this.draw();
   }
 
-  disappear(): void {
+  disappear() {
     this.isShimmer = false;
     this.counter = 0;
     if (this.size <= 0) {
@@ -97,7 +87,7 @@ class Pixel {
     this.draw();
   }
 
-  shimmer(): void {
+  shimmer() {
     if (this.size >= this.maxSize) {
       this.isReverse = true;
     } else if (this.size <= this.minSize) {
@@ -111,11 +101,11 @@ class Pixel {
   }
 }
 
-function getEffectiveSpeed(value: string | number, reducedMotion: boolean): number {
+function getEffectiveSpeed(value: number | string, reducedMotion: boolean) {
   const min = 0;
   const max = 100;
   const throttle = 0.001;
-  const parsed = typeof value === 'string' ? parseInt(value, 10) : value;
+  const parsed = parseInt(value.toString(), 10);
 
   if (parsed <= min || reducedMotion) {
     return min;
@@ -160,7 +150,18 @@ const VARIANTS = {
   }
 };
 
-const PixelCard: React.FC<PixelCardProps> = ({
+export interface PixelCardProps {
+  variant?: keyof typeof VARIANTS | string;
+  gap?: number;
+  speed?: number;
+  colors?: string;
+  noFocus?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+  onClick?: (e: React.MouseEvent) => void;
+}
+
+export default function PixelCard({
   variant = "default",
   gap,
   speed,
@@ -169,7 +170,7 @@ const PixelCard: React.FC<PixelCardProps> = ({
   className = "",
   children,
   onClick
-}) => {
+}: PixelCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pixelsRef = useRef<Pixel[]>([]);
@@ -179,7 +180,8 @@ const PixelCard: React.FC<PixelCardProps> = ({
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   ).current;
 
-  const variantCfg = VARIANTS[variant as keyof typeof VARIANTS] || VARIANTS.default;
+  const variantKey = variant as keyof typeof VARIANTS;
+  const variantCfg = VARIANTS[variantKey] || VARIANTS.default;
   const finalGap = gap ?? variantCfg.gap;
   const finalSpeed = speed ?? variantCfg.speed;
   const finalColors = colors ?? variantCfg.colors;
@@ -191,7 +193,7 @@ const PixelCard: React.FC<PixelCardProps> = ({
     const rect = containerRef.current.getBoundingClientRect();
     const width = Math.floor(rect.width);
     const height = Math.floor(rect.height);
-    const ctx = canvasRef.current.getContext("2d");
+    const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
     canvasRef.current.width = width;
@@ -227,7 +229,7 @@ const PixelCard: React.FC<PixelCardProps> = ({
     pixelsRef.current = pxs;
   };
 
-  const doAnimate = (fnName: "appear" | "disappear") => {
+  const doAnimate = (fnName: 'appear' | 'disappear') => {
     animationRef.current = requestAnimationFrame(() => doAnimate(fnName));
     const timeNow = performance.now();
     const timePassed = timeNow - timePreviousRef.current;
@@ -236,7 +238,7 @@ const PixelCard: React.FC<PixelCardProps> = ({
     if (timePassed < timeInterval) return;
     timePreviousRef.current = timeNow - (timePassed % timeInterval);
 
-    const ctx = canvasRef.current?.getContext("2d");
+    const ctx = canvasRef.current?.getContext('2d');
     if (!ctx || !canvasRef.current) return;
 
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -249,14 +251,12 @@ const PixelCard: React.FC<PixelCardProps> = ({
         allIdle = false;
       }
     }
-    if (allIdle) {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+    if (allIdle && animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
     }
   };
 
-  const handleAnimation = (name: "appear" | "disappear") => {
+  const handleAnimation = (name: 'appear' | 'disappear') => {
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
@@ -295,12 +295,12 @@ const PixelCard: React.FC<PixelCardProps> = ({
     <div
       ref={containerRef}
       className={`pixel-card ${className}`}
+      onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onFocus={finalNoFocus ? undefined : onFocus}
       onBlur={finalNoFocus ? undefined : onBlur}
       tabIndex={finalNoFocus ? -1 : 0}
-      onClick={onClick}
     >
       <canvas
         className="pixel-canvas"
@@ -309,6 +309,4 @@ const PixelCard: React.FC<PixelCardProps> = ({
       {children}
     </div>
   );
-};
-
-export default PixelCard;
+}
