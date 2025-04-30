@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ShoppingCart, Eye, ChevronDown, ChevronUp, ImageIcon } from 'lucide-react';
 import { Product } from '@/types/product';
 import { motion } from 'framer-motion';
+import EncryptButton from './animations/EncryptButton';
 
 interface ProductCardProps {
   product: Product;
@@ -128,17 +129,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
         </CardContent>
         
         <CardFooter className="flex flex-col sm:flex-row gap-2 p-6 pt-0" onClick={(e) => e.stopPropagation()}>
-          <Button 
+          <EncryptButton 
             onClick={(e) => {
               e.stopPropagation();
               onAddToCart();
             }}
-            variant="outline" 
             className="w-full sm:flex-1 hover:bg-blue-900/30"
           >
-            <ShoppingCart className="mr-2 h-4 w-4" />
             Add to Cart
-          </Button>
+          </EncryptButton>
           
           <Button 
             onClick={(e) => {

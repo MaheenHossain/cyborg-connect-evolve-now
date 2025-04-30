@@ -5,6 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Product } from '@/types/product';
 import ProductCard from '@/components/ProductCard';
 import { useCart } from '@/context/CartContext';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ProductCarouselProps {
   products: Product[];
@@ -14,9 +15,15 @@ interface ProductCarouselProps {
 const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, onShowAuthModal }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { toast } = useToast();
 
   const handleAddToCart = (product: Product) => {
     addToCart(product);
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart.`,
+      duration: 3000,
+    });
   };
 
   const handleProductClick = (product: Product) => {
