@@ -134,7 +134,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           
           <StarBorder 
             as={Button}
-            onClick={(e: React.MouseEvent) => {
+            onClick={(e) => {
               e.stopPropagation();
               onBuyNow();
             }}

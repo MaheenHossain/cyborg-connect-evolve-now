@@ -1,6 +1,16 @@
-
 import { useEffect, useRef } from "react";
 import './PixelCard.css';
+
+interface PixelCardProps {
+  variant?: string;
+  gap?: number;
+  speed?: number;
+  colors?: string;
+  noFocus?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+  onClick?: () => void;
+}
 
 class Pixel {
   width: number;
@@ -105,7 +115,7 @@ function getEffectiveSpeed(value: string | number, reducedMotion: boolean): numb
   const min = 0;
   const max = 100;
   const throttle = 0.001;
-  const parsed = parseInt(value.toString(), 10);
+  const parsed = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (parsed <= min || reducedMotion) {
     return min;
@@ -117,15 +127,9 @@ function getEffectiveSpeed(value: string | number, reducedMotion: boolean): numb
 }
 
 /**
- *  Variants for different color schemes
+ *  You can change/expand these as you like.
  */
-const VARIANTS: Record<string, {
-  activeColor: string | null,
-  gap: number,
-  speed: number,
-  colors: string,
-  noFocus: boolean
-}> = {
+const VARIANTS = {
   default: {
     activeColor: null,
     gap: 5,
@@ -156,18 +160,7 @@ const VARIANTS: Record<string, {
   }
 };
 
-interface PixelCardProps {
-  variant?: keyof typeof VARIANTS;
-  gap?: number;
-  speed?: number;
-  colors?: string;
-  noFocus?: boolean;
-  className?: string;
-  children: React.ReactNode;
-  onClick?: () => void; // Adding onClick prop
-}
-
-export default function PixelCard({
+const PixelCard: React.FC<PixelCardProps> = ({
   variant = "default",
   gap,
   speed,
@@ -176,7 +169,7 @@ export default function PixelCard({
   className = "",
   children,
   onClick
-}: PixelCardProps) {
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pixelsRef = useRef<Pixel[]>([]);
@@ -186,7 +179,7 @@ export default function PixelCard({
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   ).current;
 
-  const variantCfg = VARIANTS[variant] || VARIANTS.default;
+  const variantCfg = VARIANTS[variant as keyof typeof VARIANTS] || VARIANTS.default;
   const finalGap = gap ?? variantCfg.gap;
   const finalSpeed = speed ?? variantCfg.speed;
   const finalColors = colors ?? variantCfg.colors;
@@ -306,8 +299,8 @@ export default function PixelCard({
       onMouseLeave={onMouseLeave}
       onFocus={finalNoFocus ? undefined : onFocus}
       onBlur={finalNoFocus ? undefined : onBlur}
-      onClick={onClick}
       tabIndex={finalNoFocus ? -1 : 0}
+      onClick={onClick}
     >
       <canvas
         className="pixel-canvas"
@@ -316,4 +309,6 @@ export default function PixelCard({
       {children}
     </div>
   );
-}
+};
+
+export default PixelCard;
