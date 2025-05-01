@@ -125,13 +125,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
         </CardContent>
         
         <CardFooter className="flex flex-col sm:flex-row gap-2 p-6 pt-0 bg-black/60" onClick={(e) => e.stopPropagation()}>
-          <Button 
-            onClick={onAddToCart}
-            variant="outline"
-            className="w-full sm:flex-1 hover:bg-blue-900/30 border-blue-500 text-blue-400 hover:text-blue-300"
-          >
-            Add to Cart
-          </Button>
+          <EncryptButton onClick={onAddToCart}>Add to Cart</EncryptButton>
           
           <Button
             onClick={onBuyNow}

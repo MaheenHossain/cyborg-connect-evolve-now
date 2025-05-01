@@ -22,13 +22,14 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              className="bg-black/60 p-6 rounded-lg backdrop-blur-sm border border-blue-900/30"
             >
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-shadow-lg">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 filter drop-shadow-[0_3px_10px_rgba(14,165,233,0.9)]">
                   Elevate Humanity
                 </span>
                 <br />
-                <span className="text-white filter drop-shadow-[0_3px_10px_rgba(0,0,0,1)] bg-black/50 px-4 py-2 rounded">
+                <span className="text-white filter drop-shadow-[0_3px_10px_rgba(0,0,0,1)]">
                   with Advanced Cybernetic Enhancements
                 </span>
               </h1>

@@ -1,16 +1,15 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Tables } from '@/integrations/supabase/types';
-import { supabase } from '@/integrations/supabase/client';
 import { imageExists, parseImageSrc } from '@/utils/imageUtils';
-import TempImageUploader from '@/components/TempImageUploader';
+import EncryptButton from '@/components/animations/EncryptButton';
+import SpotlightCard from '@/components/animations/SpotlightCard';
 
 type Product = Tables<'products'>;
 
@@ -29,7 +28,6 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [customImage, setCustomImage] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -186,13 +184,6 @@ const ProductDetail = () => {
     window.open('https://www.paypal.com', '_blank');
   };
 
-  const handleImageUpdate = (imageUrl: string | null) => {
-    setCustomImage(imageUrl);
-    if (imageUrl) {
-      setImageLoaded(true);
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-cyborg-dark flex items-center justify-center">
@@ -244,28 +235,33 @@ const ProductDetail = () => {
             className="grid grid-cols-1 lg:grid-cols-2 gap-12"
           >
             {/* Product Image */}
-            <motion.div 
-              className="relative overflow-hidden rounded-xl bg-gradient-to-b from-blue-900/20 to-cyan-900/20 p-2"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
+            <SpotlightCard 
+              className="p-4 bg-gradient-to-b from-blue-900/20 to-cyan-900/20 rounded-xl" 
+              spotlightColor="rgba(0, 229, 255, 0.2)"
             >
-              {!imageLoaded && !customImage && (
-                <div className="w-full h-96 flex items-center justify-center bg-gradient-to-b from-blue-900/20 to-cyan-900/20">
-                  <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              )}
-              <motion.img
-                src={customImage || product.image_url}
-                alt={product.name}
-                className={`w-full h-auto object-contain rounded-lg ${(imageLoaded || customImage) ? 'opacity-100' : 'opacity-0'}`}
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: (imageLoaded || customImage) ? 1 : 0.9, opacity: (imageLoaded || customImage) ? 1 : 0 }}
-                transition={{ duration: 0.5 }}
-                onLoad={() => setImageLoaded(true)}
-                onError={() => setImageLoaded(false)}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-            </motion.div>
+              <motion.div 
+                className="relative overflow-hidden rounded-xl"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {!imageLoaded && (
+                  <div className="w-full h-96 flex items-center justify-center bg-gradient-to-b from-blue-900/20 to-cyan-900/20">
+                    <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+                <motion.img
+                  src={product.image_url}
+                  alt={product.name}
+                  className={`w-full h-auto object-contain rounded-lg ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: imageLoaded ? 1 : 0.9, opacity: imageLoaded ? 1 : 0 }}
+                  transition={{ duration: 0.5 }}
+                  onLoad={() => setImageLoaded(true)}
+                  onError={() => setImageLoaded(false)}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+              </motion.div>
+            </SpotlightCard>
             
             {/* Product Info */}
             <div className="space-y-8">
@@ -306,9 +302,6 @@ const ProductDetail = () => {
                   ${product.price.toFixed(2)}
                 </motion.div>
               </div>
-              
-              {/* Image Uploader */}
-              <TempImageUploader onImageUpdate={handleImageUpdate} />
               
               <motion.div 
                 className="space-y-6"
@@ -357,15 +350,9 @@ const ProductDetail = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7 }}
               >
-                <Button 
-                  onClick={handleAddToCart}
-                  variant="outline" 
-                  size="lg"
-                  className="flex-1 hover:bg-blue-900/30 border-blue-500 text-blue-400 hover:text-blue-300 text-lg py-7"
-                >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Add to Cart
-                </Button>
+                <div className="flex-1">
+                  <EncryptButton onClick={handleAddToCart}>Add to Cart</EncryptButton>
+                </div>
                 
                 <Button 
                   onClick={handleBuyNow}
