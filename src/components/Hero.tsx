@@ -24,11 +24,11 @@ const Hero = () => {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-shadow-lg">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 filter drop-shadow-[0_2px_8px_rgba(14,165,233,0.8)]">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 filter drop-shadow-[0_3px_10px_rgba(14,165,233,0.9)]">
                   Elevate Humanity
                 </span>
                 <br />
-                <span className="text-white filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                <span className="text-white filter drop-shadow-[0_3px_10px_rgba(0,0,0,1)] bg-black/50 px-4 py-2 rounded">
                   with Advanced Cybernetic Enhancements
                 </span>
               </h1>
@@ -72,7 +72,7 @@ const Hero = () => {
                 transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
               >
                 <img 
-                  src="/lovable-uploads/2cf48c44-4224-46ee-ae2c-c53959a19c2e.png" 
+                  src="https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/Hero%20Page%20Cyborg.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9IZXJvIFBhZ2UgQ3lib3JnLnBuZyIsImlhdCI6MTc0NjA5Njc1MCwiZXhwIjoxNzQ4Njg4NzUwfQ._GEXKXL3DNuxPAua9DUlqtorNt3LlcxVmS9l7EllkkQ" 
                   alt="Cybernetic Enhancement" 
                   className="object-contain w-full h-full drop-shadow-[0_0_30px_rgba(139,92,246,0.6)]"
                 />

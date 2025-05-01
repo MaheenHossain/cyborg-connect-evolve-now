@@ -14,6 +14,16 @@ import TempImageUploader from '@/components/TempImageUploader';
 
 type Product = Tables<'products'>;
 
+// Define image paths for each product with the updated URLs
+const productImages = {
+  'NeuroLink Pro': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/neuro-link-pro.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9uZXVyby1saW5rLXByby5wbmciLCJpYXQiOjE3NDYwOTY3MTEsImV4cCI6MTc0ODY4ODcxMX0.ib7pW6_GXviXl8_yXSWsCyfQJI6lCpUiPg7ZP6eXHew',
+  'Titan Arm X1': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/titan-arm.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy90aXRhbi1hcm0ucG5nIiwiaWF0IjoxNzQ2MDk2NzM3LCJleHAiOjE3NDg2ODg3Mzd9.cuU9W155kGRhnpdfhe1KHogBaR1Wgrgp8yOzN4MOvAA',
+  'Eagle Eye V5': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/eagle-eye.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9lYWdsZS1leWUucG5nIiwiaWF0IjoxNzQ2MDk2NjkzLCJleHAiOjE3NDg2ODg2OTN9.MTFj2x-rssS8pPhk8CqiRaMJtAkx8zvbGJ8rLgYXtxE',
+  'CardioTech Heart': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/cardio-tech.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9jYXJkaW8tdGVjaC5wbmciLCJpYXQiOjE3NDYwOTY0NDcsImV4cCI6MTc0ODY4ODQ0N30.UC0UGDqhSDdLdQ5RZmUS0JKqOv-ktqomo2w2VAAck8k',
+  'CortexCore Neural Interface': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/cortex-core.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9jb3J0ZXgtY29yZS5wbmciLCJpYXQiOjE3NDYwOTY2NzcsImV4cCI6MTc0ODY4ODY3N30.4OAAIUCqVz2gVfORX-JNnL9Ru2ueavKmLhnB1FYJWV0',
+  'Precision Hand MK-II': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/precision-hand.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9wcmVjaXNpb24taGFuZC5wbmciLCJpYXQiOjE3NDYwOTY3MjUsImV4cCI6MTc0ODY4ODcyNX0.07MCDqo82H-5wNaSSTDuqh7ZoQQ756KjKndjOM3QhEQ',
+};
+
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
@@ -26,16 +36,6 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        // Define image paths for each product with the new uploaded images
-        const productImages = {
-          'NeuroLink Pro': '/lovable-uploads/626c19dc-798a-4f67-a4d6-7469fb9c674e.png', // Brain enhancement
-          'Titan Arm X1': '/lovable-uploads/e9c5a966-fc47-4c71-b8af-bcfb09d0b4fe.png', // Robotic arm
-          'Eagle Eye V5': '/lovable-uploads/a9541d3a-b6b3-4e95-b2e9-5b4f1c660f70.png', // Helmet with display
-          'CardioTech Heart': '/lovable-uploads/7de1684e-bc1f-44e0-8b0f-dc758af9a113.png', // Mechanical heart
-          'CortexCore Neural Interface': '/lovable-uploads/09eb9f86-36f0-432f-89a4-21f57b2a2fea.png', // AI head profile
-          'Precision Hand MK-II': '/lovable-uploads/e34b35e7-416d-4f57-a8d5-18247f1b8a20.png', // Robotic hand
-        };
-
         // For now, we'll use our sample data
         const SAMPLE_PRODUCTS = [
           {
@@ -231,7 +231,7 @@ const ProductDetail = () => {
           <Button 
             variant="ghost" 
             onClick={() => navigate('/')}
-            className="mb-8 flex items-center hover:bg-blue-900/20"
+            className="mb-8 flex items-center hover:bg-blue-900/20 text-white"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Products
@@ -280,7 +280,7 @@ const ProductDetail = () => {
                 </motion.div>
                 
                 <motion.h1 
-                  className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400"
+                  className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400 drop-shadow-[0_2px_8px_rgba(0,0,0,1)]"
                   initial={{ y: -20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
@@ -289,7 +289,7 @@ const ProductDetail = () => {
                 </motion.h1>
                 
                 <motion.p 
-                  className="text-xl text-gray-300 mb-6"
+                  className="text-xl text-white mb-6 bg-black/50 p-4 rounded-md"
                   initial={{ y: -20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
@@ -316,7 +316,7 @@ const ProductDetail = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
               >
-                <div className="bg-blue-900/10 border border-blue-900/30 p-6 rounded-lg">
+                <div className="bg-black/50 border border-blue-900/30 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-4 text-blue-400">Features</h3>
                   <ul className="space-y-2">
                     {product.features && typeof product.features === 'object' && Object.entries(product.features).map(([key, value]) => (
@@ -333,7 +333,7 @@ const ProductDetail = () => {
                   </ul>
                 </div>
                 
-                <div className="bg-blue-900/10 border border-blue-900/30 p-6 rounded-lg">
+                <div className="bg-black/50 border border-blue-900/30 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-4 text-blue-400">Technical Specifications</h3>
                   <ul className="space-y-2">
                     {product.technical_specs && typeof product.technical_specs === 'object' && Object.entries(product.technical_specs).map(([key, value]) => (
@@ -361,7 +361,7 @@ const ProductDetail = () => {
                   onClick={handleAddToCart}
                   variant="outline" 
                   size="lg"
-                  className="flex-1 hover:bg-blue-900/30 text-lg py-7"
+                  className="flex-1 hover:bg-blue-900/30 border-blue-500 text-blue-400 hover:text-blue-300 text-lg py-7"
                 >
                   <ShoppingCart className="mr-2 h-5 w-5" />
                   Add to Cart
@@ -370,7 +370,7 @@ const ProductDetail = () => {
                 <Button 
                   onClick={handleBuyNow}
                   size="lg"
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg py-7"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-lg py-7"
                 >
                   Buy Now with PayPal
                 </Button>

@@ -4,14 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { Category, Product } from '@/types/product';
 import { imageExists, parseImageSrc } from '@/utils/imageUtils';
 
-// Define image paths for each product with the newly uploaded images
+// Define image paths for each product with the updated URLs
 const productImages = {
-  'NeuroLink Pro': '/lovable-uploads/626c19dc-798a-4f67-a4d6-7469fb9c674e.png', // Brain enhancement
-  'Titan Arm X1': '/lovable-uploads/e9c5a966-fc47-4c71-b8af-bcfb09d0b4fe.png', // Robotic arm
-  'Eagle Eye V5': '/lovable-uploads/a9541d3a-b6b3-4e95-b2e9-5b4f1c660f70.png', // Helmet with display
-  'CardioTech Heart': '/lovable-uploads/7de1684e-bc1f-44e0-8b0f-dc758af9a113.png', // Mechanical heart
-  'CortexCore Neural Interface': '/lovable-uploads/09eb9f86-36f0-432f-89a4-21f57b2a2fea.png', // AI head profile
-  'Precision Hand MK-II': '/lovable-uploads/e34b35e7-416d-4f57-a8d5-18247f1b8a20.png', // Robotic hand
+  'NeuroLink Pro': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/neuro-link-pro.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9uZXVyby1saW5rLXByby5wbmciLCJpYXQiOjE3NDYwOTY3MTEsImV4cCI6MTc0ODY4ODcxMX0.ib7pW6_GXviXl8_yXSWsCyfQJI6lCpUiPg7ZP6eXHew',
+  'Titan Arm X1': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/titan-arm.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy90aXRhbi1hcm0ucG5nIiwiaWF0IjoxNzQ2MDk2NzM3LCJleHAiOjE3NDg2ODg3Mzd9.cuU9W155kGRhnpdfhe1KHogBaR1Wgrgp8yOzN4MOvAA',
+  'Eagle Eye V5': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/eagle-eye.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9lYWdsZS1leWUucG5nIiwiaWF0IjoxNzQ2MDk2NjkzLCJleHAiOjE3NDg2ODg2OTN9.MTFj2x-rssS8pPhk8CqiRaMJtAkx8zvbGJ8rLgYXtxE',
+  'CardioTech Heart': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/cardio-tech.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9jYXJkaW8tdGVjaC5wbmciLCJpYXQiOjE3NDYwOTY0NDcsImV4cCI6MTc0ODY4ODQ0N30.UC0UGDqhSDdLdQ5RZmUS0JKqOv-ktqomo2w2VAAck8k',
+  'CortexCore Neural Interface': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/cortex-core.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9jb3J0ZXgtY29yZS5wbmciLCJpYXQiOjE3NDYwOTY2NzcsImV4cCI6MTc0ODY4ODY3N30.4OAAIUCqVz2gVfORX-JNnL9Ru2ueavKmLhnB1FYJWV0',
+  'Precision Hand MK-II': 'https://bijcexwmtiunnlxvibvz.supabase.co/storage/v1/object/sign/maheen07/precision-hand.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzRjZWRjNTM1LTA2ZmItNDYzNy05OWJmLTMwM2JlOTNjN2M2NiJ9.eyJ1cmwiOiJtYWhlZW4wNy9wcmVjaXNpb24taGFuZC5wbmciLCJpYXQiOjE3NDYwOTY3MjUsImV4cCI6MTc0ODY4ODcyNX0.07MCDqo82H-5wNaSSTDuqh7ZoQQ756KjKndjOM3QhEQ',
 };
 
 export const useProducts = () => {
