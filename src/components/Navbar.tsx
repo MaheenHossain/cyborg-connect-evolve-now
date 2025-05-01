@@ -95,7 +95,7 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
   return (
     <nav 
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-black/80 backdrop-blur-md shadow-xl' : 'bg-transparent'
+        isScrolled ? 'bg-black/90 backdrop-blur-md shadow-xl' : 'bg-black/60 backdrop-blur-sm'
       }`}
     >
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -109,7 +109,7 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
               </div>
             </div>
           </div>
-          <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+          <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600 filter drop-shadow-[0_2px_3px_rgba(0,0,0,0.8)]">
             CYBRIX CORE
           </span>
         </Link>
@@ -148,7 +148,7 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
             onClick={onCartClick}
             variant="ghost" 
             size="icon"
-            className="relative hover:bg-blue-800/20 transition-colors"
+            className="relative hover:bg-blue-800/20 transition-colors text-white"
           >
             <ShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
@@ -162,7 +162,7 @@ const Navbar = ({ onCartClick }: NavbarProps) => {
             onClick={() => setIsMenuOpen(!isMenuOpen)} 
             variant="ghost" 
             size="icon"
-            className="md:hidden hover:bg-blue-800/20"
+            className="md:hidden hover:bg-blue-800/20 text-white"
           >
             {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>

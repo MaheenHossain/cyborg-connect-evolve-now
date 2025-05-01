@@ -84,3 +84,32 @@ export const parseImageSrc = (src: string | null, productName: string): string =
   // Return the original src if it passes all checks
   return src;
 };
+
+/**
+ * Enhance image for display by applying a shadow or border for better visibility
+ * @param imageElement - The image DOM element to enhance
+ */
+export const enhanceImageVisibility = (imageElement: HTMLImageElement | null): void => {
+  if (!imageElement) return;
+  
+  // Add shadow and border for better visibility against backgrounds
+  imageElement.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+  imageElement.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+  imageElement.style.borderRadius = '8px';
+};
+
+/**
+ * Create a styled container for product images
+ * @returns CSS styles for product image containers
+ */
+export const getProductImageContainerStyle = (): React.CSSProperties => {
+  return {
+    background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(139, 92, 246, 0.05))',
+    borderRadius: '12px',
+    padding: '1rem',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+    border: '1px solid rgba(139, 92, 246, 0.2)',
+    position: 'relative',
+    overflow: 'hidden',
+  };
+};

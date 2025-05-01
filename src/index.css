@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -54,6 +55,26 @@ body {
 
 h1, h2, h3, h4, .font-cyber {
   font-family: 'Orbitron', sans-serif;
+}
+
+/* Add text shadow for better readability */
+.text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+}
+
+.text-shadow-glow {
+  text-shadow: 
+    0 0 5px rgba(14, 165, 233, 0.5),
+    0 0 10px rgba(14, 165, 233, 0.3),
+    0 2px 3px rgba(0, 0, 0, 0.8);
 }
 
 .animate-text-shimmer {
@@ -117,6 +138,28 @@ h1, h2, h3, h4, .font-cyber {
   background-color: var(--cyborg-dark);
 }
 
+/* Product card styling for better visibility */
+.product-card {
+  background: linear-gradient(135deg, rgba(20, 18, 42, 0.9) 0%, rgba(30, 27, 61, 0.9) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.product-card-title {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.product-card-description {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.product-card-price {
+  color: rgba(14, 165, 233, 1);
+  text-shadow: 0 0 5px rgba(14, 165, 233, 0.3);
+}
+
+/* Keep existing code */
 button {
   position: relative;
   overflow: hidden;
@@ -144,6 +187,7 @@ button:active::after {
   transition: 0s;
 }
 
+/* Keep existing reveal animations */
 .reveal-element {
   opacity: 0;
   transform: translateY(20px);
@@ -221,6 +265,7 @@ button:active::after {
     0 0 10px currentColor;
 }
 
+/* Keep existing animations */
 @keyframes scan-line {
   0% {
     transform: translateY(-100%);
@@ -257,4 +302,17 @@ button:active::after {
 
 .morph-border {
   animation: morph-border 8s ease-in-out infinite;
+}
+
+/* Better contrast for product details */
+.product-detail-heading {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.product-detail-description {
+  color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 0.5rem;
 }

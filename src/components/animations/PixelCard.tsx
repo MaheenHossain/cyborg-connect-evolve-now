@@ -6,7 +6,7 @@ export interface PixelCardProps {
   children: React.ReactNode;
   variant?: 'blue' | 'purple' | 'green' | 'red' | 'cyan';
   className?: string;
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const PixelCard: React.FC<PixelCardProps> = ({ 
