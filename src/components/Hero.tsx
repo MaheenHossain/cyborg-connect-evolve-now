@@ -22,7 +22,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="bg-black/60 p-6 rounded-lg backdrop-blur-sm border border-blue-900/30"
+              className="bg-white/10 backdrop-blur-lg p-6 rounded-lg border border-blue-400/20 shadow-xl"
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 filter drop-shadow-[0_3px_10px_rgba(14,165,233,0.9)]">
@@ -39,7 +39,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl font-medium bg-black/80 backdrop-blur-sm p-6 rounded-lg text-white max-w-xl border border-blue-900/50 shadow-lg shadow-blue-500/20"
+              className="text-xl font-medium bg-white/5 backdrop-blur-md p-6 rounded-lg text-white max-w-xl border border-blue-400/30 shadow-lg shadow-blue-500/20"
             >
               Experience the future with our cutting-edge cybernetic implants and augmentations. Designed to enhance human capabilities beyond natural limitations.
             </motion.p>
