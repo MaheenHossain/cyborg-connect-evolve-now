@@ -38,14 +38,16 @@ export const getFallbackImage = (imageName: string): string => {
   // Simplified image name for fallback matching
   const simplifiedName = imageName.toLowerCase().replace(/[^a-z0-9]/g, '');
   
-  // Map of simplified names to fallback images (now updated with uploaded images)
+  // Map of product names to the newly uploaded images
   const fallbackMap: Record<string, string> = {
-    'neurolinkpro': '/lovable-uploads/d343cf65-8e74-4006-ac07-2d711465c17c.png', 
-    'titanarmx1': '/lovable-uploads/e40d22d7-6aff-4eaa-b027-8229d240733f.png', 
-    'eagleeyev5': '/lovable-uploads/713b0aed-b5be-48fd-98b1-6b0631f35f24.png',
-    'cardiotechheart': '/lovable-uploads/b485ed22-6e72-4f38-a1bb-5e9ebc17a884.png',
-    'cortexcoreneuralinferface': '/lovable-uploads/86c31ae0-a401-4d9d-85de-bd884578a3e7.png',
-    'precisionhandmkii': '/lovable-uploads/2300ed75-7f6d-4ae7-847b-4c89e2107b1c.png'
+    'neurolinkpro': '/lovable-uploads/626c19dc-798a-4f67-a4d6-7469fb9c674e.png', // Brain image
+    'titanarmx1': '/lovable-uploads/e9c5a966-fc47-4c71-b8af-bcfb09d0b4fe.png', // Robotic arm
+    'eagleeyev5': '/lovable-uploads/a9541d3a-b6b3-4e95-b2e9-5b4f1c660f70.png', // Helmet with display
+    'cardiotechheart': '/lovable-uploads/7de1684e-bc1f-44e0-8b0f-dc758af9a113.png', // Mechanical heart
+    'cortexcoreneuralinferface': '/lovable-uploads/09eb9f86-36f0-432f-89a4-21f57b2a2fea.png', // AI head profile
+    'cortexcoreneuralinteface': '/lovable-uploads/09eb9f86-36f0-432f-89a4-21f57b2a2fea.png', // Alternate spelling
+    'cortexcoreneurainterface': '/lovable-uploads/09eb9f86-36f0-432f-89a4-21f57b2a2fea.png', // Another alternate spelling
+    'precisionhandmkii': '/lovable-uploads/e34b35e7-416d-4f57-a8d5-18247f1b8a20.png' // Robotic hand
   };
 
   return fallbackMap[simplifiedName] || '/placeholder.svg';
@@ -63,16 +65,22 @@ export const parseImageSrc = (src: string | null, productName: string): string =
     return getFallbackImage(productName);
   }
   
-  // Check for lovable-uploads path and ensure it starts with '/'
-  if (src.includes('lovable-uploads') && !src.startsWith('/')) {
-    return `/${src}`;
-  }
-  
   // If src is a full URL, return it
   if (src.startsWith('http')) return src;
   
-  // If src is a relative path, make sure it starts with '/'
-  if (!src.startsWith('/')) return `/${src}`;
+  // If src contains lovable-uploads, make sure it's properly formatted
+  if (src.includes('lovable-uploads')) {
+    // Check if it's already properly formatted
+    if (src.startsWith('/')) return src;
+    // If not, add the leading slash
+    return `/${src}`;
+  }
   
+  // For other cases, check if it's a path without the leading slash
+  if (!src.startsWith('/')) {
+    return `/${src}`;
+  }
+  
+  // Return the original src if it passes all checks
   return src;
 };

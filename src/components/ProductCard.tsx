@@ -134,10 +134,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           
           <StarBorder 
             as={Button}
-            onClick={(e) => {
-              e.stopPropagation();
-              onBuyNow();
-            }}
+            onClick={onBuyNow}
             color="rgba(14, 165, 233, 0.6)"
             className="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
           >

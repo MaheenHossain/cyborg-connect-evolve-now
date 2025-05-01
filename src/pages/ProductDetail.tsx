@@ -28,12 +28,12 @@ const ProductDetail = () => {
       try {
         // Define image paths for each product with the new uploaded images
         const productImages = {
-          'NeuroLink Pro': '/lovable-uploads/d343cf65-8e74-4006-ac07-2d711465c17c.png', // Brain enhancement
-          'Titan Arm X1': '/lovable-uploads/e40d22d7-6aff-4eaa-b027-8229d240733f.png', // Robotic arm
-          'Eagle Eye V5': '/lovable-uploads/713b0aed-b5be-48fd-98b1-6b0631f35f24.png', // Helmet with display
-          'CardioTech Heart': '/lovable-uploads/b485ed22-6e72-4f38-a1bb-5e9ebc17a884.png', // Mechanical heart
-          'CortexCore Neural Interface': '/lovable-uploads/86c31ae0-a401-4d9d-85de-bd884578a3e7.png', // AI head profile
-          'Precision Hand MK-II': '/lovable-uploads/2300ed75-7f6d-4ae7-847b-4c89e2107b1c.png', // Robotic hand
+          'NeuroLink Pro': '/lovable-uploads/626c19dc-798a-4f67-a4d6-7469fb9c674e.png', // Brain enhancement
+          'Titan Arm X1': '/lovable-uploads/e9c5a966-fc47-4c71-b8af-bcfb09d0b4fe.png', // Robotic arm
+          'Eagle Eye V5': '/lovable-uploads/a9541d3a-b6b3-4e95-b2e9-5b4f1c660f70.png', // Helmet with display
+          'CardioTech Heart': '/lovable-uploads/7de1684e-bc1f-44e0-8b0f-dc758af9a113.png', // Mechanical heart
+          'CortexCore Neural Interface': '/lovable-uploads/09eb9f86-36f0-432f-89a4-21f57b2a2fea.png', // AI head profile
+          'Precision Hand MK-II': '/lovable-uploads/e34b35e7-416d-4f57-a8d5-18247f1b8a20.png', // Robotic hand
         };
 
         // For now, we'll use our sample data
@@ -188,6 +188,9 @@ const ProductDetail = () => {
 
   const handleImageUpdate = (imageUrl: string | null) => {
     setCustomImage(imageUrl);
+    if (imageUrl) {
+      setImageLoaded(true);
+    }
   };
 
   if (loading) {

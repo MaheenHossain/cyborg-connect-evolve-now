@@ -63,7 +63,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl font-medium bg-black/50 backdrop-blur-sm p-4 rounded-lg text-white max-w-xl border border-blue-900/30"
+              className="text-xl font-medium bg-black/70 backdrop-blur-sm p-6 rounded-lg text-white max-w-xl border border-blue-900/50 shadow-lg shadow-blue-500/20"
             >
               Experience the future with our cutting-edge cybernetic implants and augmentations. Designed to enhance human capabilities beyond natural limitations.
             </motion.p>
